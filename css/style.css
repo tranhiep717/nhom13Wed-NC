@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 Template Name: Electro - HTML Ecommerce Template
 Author: yaminncco
@@ -68,14 +67,14 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 10px;
 }
 
-a {
+  color: #FFF;
   color: #2B2D42;
   font-weight: 500;
   -webkit-transition: 0.2s color;
   transition: 0.2s color;
 }
 
-a:hover, a:focus {
+  text-transform: uppercase;
   color: #D10024;
   text-decoration: none;
   outline: none;
@@ -998,8 +997,6 @@ textarea.input {
   font-size: 12px;
   line-height: 10px;
   background: #1e1f29;
-  color: #FFF;
-  text-transform: uppercase;
   z-index: 10;
   opacity: 0;
   visibility: hidden;
