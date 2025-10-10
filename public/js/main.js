@@ -165,4 +165,25 @@
 		});
 	}
 
+	// Cập nhật mini cart động sau khi thêm sản phẩm bằng AJAX
+	window.updateMiniCart = function() {
+    $.ajax({
+        url: '/cart/minicart',
+        type: 'GET',
+        dataType: 'json',
+        success: function(res) {
+            if(res.html !== undefined) {
+                $('#minicart-content').html(res.html);
+            }
+            if(res.cartCount !== undefined) {
+                $('#minicart-badge').text(res.cartCount);
+            }
+        }
+    });
+		// Gợi ý: Gọi window.updateMiniCart() sau khi thêm sản phẩm thành công bằng AJAX
+		// Ví dụ: success: function(res) { ... window.updateMiniCart(); ... }
+	}
+
+	// Không cần JS click cho vùng giỏ hàng header nữa vì đã là <a href> thực sự.
+
 })(jQuery);

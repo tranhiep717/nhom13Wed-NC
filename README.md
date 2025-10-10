@@ -4,8 +4,11 @@
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+
+---
 
 ## About Laravel
 
@@ -21,13 +24,41 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+---
+
+## 1. Đối tượng sử dụng
+
+Mô tả đối tượng phù hợp sử dụng dự án Laravel (ví dụ: sinh viên học ngành CNTT, người học lập trình web...).
+
+### a. Người dùng thông thường
+
+- Xem, tìm kiếm và đặt hàng sản phẩm.
+- Quản lý giỏ hàng, lịch sử mua hàng.
+
+### b. Quản trị viên
+
+- Quản lý sản phẩm, danh mục.
+- Theo dõi đơn hàng, người dùng.
+
+---
+
+## 2. Kết quả dự kiến
+
+- Một hệ thống thương mại điện tử cơ bản xây dựng bằng Laravel.
+- Phân quyền rõ ràng người dùng và quản trị viên.
+- Giao diện thân thiện và responsive.
+
+---
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
 You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript.
+
+---
 
 ## Laravel Sponsors
 
@@ -44,17 +75,25 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[Redberry](https://redberry.international/laravel-development)**
 - **[Active Logic](https://activelogic.com)**
 
+---
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
+---
+
 ## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+
+---
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Laravel, please email [Taylor Otwell](mailto:taylor@laravel.com). All security issues will be addressed promptly.
+
+---
 
 ## License
 
