@@ -57,7 +57,7 @@ Route::post('/register', [RegisterController::class, 'postRegister']);
 
 // Trang dashboard (có middleware auth)
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('user.main');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Nhóm route profile cần đăng nhập
@@ -77,5 +77,12 @@ Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('car
 
 // AJAX Mini Cart (trả về partial HTML và badge số lượng)
 Route::get('/cart/minicart', [CartController::class, 'getMiniCart'])->name('cart.minicart');
+
+//Route commen
+Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])
+     ->name('products.rating')
+     ->middleware('auth');
+Route::get('/products/{slug}', [ProductController::class, 'show'])
+->name('products.show');
 
 require __DIR__ . '/auth.php';

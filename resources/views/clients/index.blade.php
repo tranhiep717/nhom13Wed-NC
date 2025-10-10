@@ -84,13 +84,14 @@
                                 <h3 class="product-name"><a href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a></h3>
                                 <h4 class="product-price">{{ number_format($product->price) }} VNĐ <del class="product-old-price">{{ number_format($product->old_price) }} VNĐ</del></h4>
                                 <div class="product-rating">
-                                    @for ($i = 0; $i < $product->rating; $i++)
-                                        <i class="fa fa-star"></i>
-                                        @endfor
-                                        @for ($i = $product->rating; $i < 5; $i++)
-                                            <i class="fa fa-star-o"></i>
-                                            @endfor
-                                </div>
+    @php
+        $avgRating = $product->ratings->avg('rating');
+    @endphp
+    @for($i = 1; $i <= 5; $i++)
+        <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
+    @endfor
+    <span>({{ $product->ratings->count() }})</span>
+</div>
                                 <div class="product-btns">
                                     <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">thêm vào danh sách yêu thích</span></button>
                                     <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">thêm vào so sánh</span></button>
