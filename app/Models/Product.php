@@ -87,15 +87,6 @@ class Product extends Model
             }
         });
     }
-    public function ratings()
-{
-    return $this->hasMany(Rating::class);
-}
-
-public function averageRating()
-{
-    return $this->ratings()->avg('rating') ?? 0;
-}
 
     // Có thể thêm Accessor để đảm bảo image_path luôn có giá trị hợp lệ
     // public function getImagePathAttribute($value)

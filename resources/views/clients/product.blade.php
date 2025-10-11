@@ -56,14 +56,14 @@
             <h2 class="product-name">{{ $product->name }}</h2>
             <div>
                 <div class="product-rating">
-                    @php
-                        $avgRating = $product->ratings->avg('rating');
-                    @endphp
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
-                    @endfor
+                    @for ($i = 0; $i < $product->rating; $i++)
+                        <i class="fa fa-star"></i>
+                        @endfor
+                        @for ($i = $product->rating; $i < 5; $i++)
+                            <i class="fa fa-star-o"></i>
+                            @endfor
                 </div>
-                <a class="review-link" href="#tab3">{{ $product->ratings->count() }} Đánh giá </a>
+                <a class="review-link" href="#">10 Đánh giá | Thêm đánh giá của bạn</a>
             </div>
             <div>
                 <h3 class="product-price">{{ number_format($product->price) }} VNĐ <del class="product-old-price">{{ number_format($product->old_price) }} VNĐ</del></h3>
@@ -130,7 +130,7 @@
             <ul class="tab-nav">
                 <li class="active"><a data-toggle="tab" href="#tab1">Mô tả</a></li>
                 <li><a data-toggle="tab" href="#tab2">Chi tiết</a></li>
-                <li><a data-toggle="tab" href="#tab3">Đánh giá ({{ $product->ratings->count() }})</a></li>
+                <li><a data-toggle="tab" href="#tab3">Đánh giá (3)</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab1" class="tab-pane fade in active">
@@ -150,94 +150,166 @@
                 <div id="tab3" class="tab-pane fade in">
                     <div class="row">
                         <div class="col-md-3">
-    <div id="rating">
-        <div class="rating-avg">
-            <span>{{ number_format($product->ratings->avg('rating'), 1) }}</span>
-            <div class="rating-stars">
-                @php
-                    $avgRating = $product->ratings->avg('rating');
-                @endphp
-                @for($i = 1; $i <= 5; $i++)
-                    <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
-                @endfor
-            </div>
-        </div>
-        <ul class="rating">
-            @for($i = 5; $i >= 1; $i--)
-                <li>
-                    <div class="rating-stars">
-                        @for($j = 1; $j <= 5; $j++)
-                            <i class="fa fa-star{{ $j <= $i ? '' : '-o' }}"></i>
-                        @endfor
-                    </div>
-                    <div class="rating-progress">
-                        @php
-                            $count = $product->ratings->where('rating', $i)->count();
-                            $total = $product->ratings->count();
-                            $percent = $total > 0 ? ($count / $total) * 100 : 0;
-                        @endphp
-                        <div style="width: {{ $percent }}%;"></div>
-                    </div>
-                    <span class="sum">{{ $count }}</span>
-                </li>
-            @endfor
-        </ul>
-    </div>
-</div>
+                            <div id="rating">
+                                <div class="rating-avg">
+                                    <span>4.5</span>
+                                    <div class="rating-stars">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                </div>
+                                <ul class="rating">
+                                    <li>
+                                        <div class="rating-stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="rating-progress">
+                                            <div style="width: 80%;"></div>
+                                        </div>
+                                        <span class="sum">3</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating-stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="rating-progress">
+                                            <div style="width: 60%;"></div>
+                                        </div>
+                                        <span class="sum">2</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating-stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="rating-progress">
+                                            <div></div>
+                                        </div>
+                                        <span class="sum">0</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating-stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="rating-progress">
+                                            <div></div>
+                                        </div>
+                                        <span class="sum">0</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating-stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <div class="rating-progress">
+                                            <div></div>
+                                        </div>
+                                        <span class="sum">0</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div id="reviews">
                                 <ul class="reviews">
-                                    @forelse($product->ratings as $rating)
-                                        <li>
-                                            <div class="review-heading">
-                                                <h5 class="name">{{ $rating->user->name }}</h5>
-                                                <p class="date">{{ $rating->created_at->format('d M Y, g:i A') }}</p>
-                                                <div class="review-rating">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        <i class="fa fa-star{{ $i <= $rating->rating ? '' : '-o' }}"></i>
-                                                    @endfor
-                                                </div>
+                                    <li>
+                                        <div class="review-heading">
+                                            <h5 class="name">John</h5>
+                                            <p class="date">27 DEC 2018, 8:0 PM</p>
+                                            <div class="review-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
                                             </div>
-                                            <div class="review-body">
-                                                <p>{{ $rating->review }}</p>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="review-heading">
+                                            <h5 class="name">John</h5>
+                                            <p class="date">27 DEC 2018, 8:0 PM</p>
+                                            <div class="review-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
                                             </div>
-                                        </li>
-                                    @empty
-                                        <li>Chưa có đánh giá nào cho sản phẩm này</li>
-                                    @endforelse
+                                        </div>
+                                        <div class="review-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="review-heading">
+                                            <h5 class="name">John</h5>
+                                            <p class="date">27 DEC 2018, 8:0 PM</p>
+                                            <div class="review-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="reviews-pagination">
+                                    <li class="active">1</li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div id="review-form">
-    @auth
-        <form action="{{ route('products.rating', $product->id) }}" method="POST" class="review-form">
-            @csrf
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="input-rating">
-                <span>Xếp hạng của bạn: </span>
-                <div class="stars">
-                    <input id="star5" name="rating" value="5" type="radio" required><label for="star5"></label>
-                    <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-                    <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-                    <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-                    <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
-                </div>
-            </div>
-
-            <textarea name="review" class="input" placeholder="Nhận xét của bạn"></textarea>
-
-            <button type="submit" class="primary-btn">Gửi đánh giá</button>
-        </form>
-    @else
-        <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm</p>
-    @endauth
-</div>
+                                <form class="review-form">
+                                    <input class="input" type="text" placeholder="Tên của bạn">
+                                    <input class="input" type="email" placeholder="Email của bạn">
+                                    <textarea class="input" placeholder="Đánh giá của bạn"></textarea>
+                                    <div class="input-rating">
+                                        <span>Xếp hạng của bạn: </span>
+                                        <div class="stars">
+                                            <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+                                            <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+                                            <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+                                            <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+                                            <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <button class="primary-btn">Gửi</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -334,23 +406,18 @@
 </div>
 
 @if(session('success'))
-<div id="success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
     <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
         <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
-            <i class="fa fa-check" style="color:#4caf50;"></i>
+            <i class="fa fa-shopping-cart"></i> <i class="fa fa-check" style="color:#4caf50;"></i>
         </div>
         <div style="font-size:20px;font-weight:500;margin-bottom:16px;">{{ session('success') }}</div>
-        <button onclick="closeModal()" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;border:none;cursor:pointer;">Đóng</button>
+        <a href="{{ route('cart.index') }}" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
     </div>
 </div>
-
 <script>
-    function closeModal() {
-        document.getElementById('success-modal').style.display = 'none';
-    }
-
     setTimeout(function() {
-        document.getElementById('success-modal').style.display = 'none';
+        document.getElementById('cart-success-modal').style.display = 'none';
     }, 2000);
 </script>
 @endif

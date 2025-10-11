@@ -11,6 +11,7 @@ use App\Http\Controllers\DanhMucController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminAuth;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,8 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route cho admin
-Route::get('/admin', [AdminController::class, 'login'])->name('admin.login');
 
 // Route cho giỏ hàng
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -78,11 +77,19 @@ Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('car
 // AJAX Mini Cart (trả về partial HTML và badge số lượng)
 Route::get('/cart/minicart', [CartController::class, 'getMiniCart'])->name('cart.minicart');
 
-//Route commen
-Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])
-     ->name('products.rating')
-     ->middleware('auth');
-Route::get('/products/{slug}', [ProductController::class, 'show'])
-->name('products.show');
-
 require __DIR__ . '/auth.php';
+use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
+
+// Admin login routes
+Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+    });
+});
+
