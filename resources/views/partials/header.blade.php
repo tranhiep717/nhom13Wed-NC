@@ -43,18 +43,11 @@
 				</div>
 				<div class="col-md-6">
 					<div class="header-search">
-						<form>
-							<select class="input-select">
-								<option value="0">Tất cả danh mục</option>
-								<option value="1">Máy tính xách tay</option>
-								<option value="2">Điện thoại thông minh</option>
-								<option value="3">Máy ảnh</option>
-								<option value="4">Phụ kiện</option>
-							</select>
-							<input class="input" placeholder="Tìm kiếm tại đây">
-							<button class="search-btn">Tìm kiếm</button>
-						</form>
-					</div>
+        				<form action="{{ route('products.search') }}" method="GET" class="header-search-form">
+            				<input class="input" name="keyword" placeholder="Nhập từ khóa..." />
+            				<button class="search-btn">Tìm kiếm</button>
+        				</form>
+    				</div>
 				</div>
 				<div class="col-md-3 clearfix">
 					<div class="header-ctn">

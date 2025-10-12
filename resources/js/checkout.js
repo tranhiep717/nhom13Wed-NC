@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 
 	// 1. Hiển thị/ẩn thông tin tài khoản ngân hàng
@@ -114,8 +113,8 @@ $(document).ready(function(){
 			e.preventDefault();
 			alert('Vui lòng điền đầy đủ thông tin hợp lệ.');
 		} else {
-			alert('Đơn hàng của bạn đang được xử lý!');
-			// $(this).closest('form').submit(); // mở nếu muốn submit thực
+			// Đảm bảo submit form thực sự
+			$(this).closest('form').off('submit').submit();
 		}
 	});
 });

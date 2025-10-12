@@ -1,82 +1,208 @@
-/* image */
-img {
-    display: inline;
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* modal */
-.modal-dialog {
-    box-shadow: none;
+html, body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
 }
 
-ul {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+/* Navbar cố định trên cùng */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
 }
 
-/* form */
-.display_data p {
-    font-size: 20px;
-    margin-bottom: 0;
+/* Container chính chứa sidebar + content */
+.div-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 60px; /* nằm dưới navbar */
+  height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
-.display_data .form-group:last-child {
-    margin-bottom: 0;
+/* Sidebar bên trái */
+.sidebar {
+  width: 240px;
+  background: #fff;
+  color: #2c3e50;
+  padding: 10px 0 8px 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  border-right: 1px solid #e3e6f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
-/* button delete */
-.tabs-animated .delete .nav-link::before {
-    background-color: #d92550; /*--danger*/
-}
-
-/* pagination */
-nav[aria-label="Pagination Navigation"] span[aria-current=page] > span {
-    background-color: #3f6ad8f0 !important;
-    border: 1px solid #3f6ad8 !important;
-    /*opacity: 0.9;*/
-    color: #fff;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-}
-
-nav[aria-label="Pagination Navigation"] a {
-    text-decoration: none;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-}
-
-nav[aria-label="Pagination Navigation"] a:first-child {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
-}
-
-nav[aria-label="Pagination Navigation"] a:last-child {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
-}
-
-nav[aria-label="Pagination Navigation"] a:hover {
-    background-color: #e9ecef !important;
-    color: #0056b3;
-}
-
-/* icon setting */
-.ui-theme-settings .btn-open-options {
-    bottom: 48px;
-}
-.fixed-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
+.scrollbar-sidebar {
     height: 100vh;
-    width: 250px; /* Điều chỉnh theo chiều rộng sidebar bạn mong muốn */
-    z-index: 1000;
-    background-color: #fff; /* Hoặc giữ màu nền hiện tại */
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    overflow-x: hidden;
 }
 
-/* Nội dung chính cần đẩy sang phải để tránh bị sidebar che */
-.main-content {
-    margin-left: 250px; /* Phù hợp với width của sidebar */
-    padding: 20px;
+.app-sidebar__inner {
+    min-height: 100%;
+}
+
+/* Danh sách menu dọc */
+.vertical-nav-menu {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+.vertical-nav-menu li {
+  margin-bottom: 12px;
+}
+.vertical-nav-menu ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+}
+.vertical-nav-menu ul li {
+  margin-bottom: 12px;
+  display: block;
+}
+.vertical-nav-menu ul li a {
+  display: flex;
+  align-items: center;
+  color: #2c3e50;
+  background: none;
+  font-size: 1rem;
+  padding: 10px 18px 10px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.vertical-nav-menu ul li a .sidebar-icon {
+  font-size: 1.18rem;
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+.vertical-nav-menu ul li a.active, .vertical-nav-menu ul li a.active:focus, .vertical-nav-menu ul li a.active:hover {
+  color: #007bff !important;
+  font-weight: bold;
+  background: rgba(0,123,255,0.10);
+}
+.vertical-nav-menu ul li a:hover {
+  background: #f1f3f7;
+  color: #007bff;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 18px 10px 22px;
+  border-radius: 6px;
+  color: #2c3e50;
+  font-size: 1rem;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  gap: 8px;
+}
+.sidebar-link .sidebar-icon {
+  font-size: 1.18rem;
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+.sidebar-link.active, .sidebar-link.active:focus, .sidebar-link.active:hover {
+  color: #007bff !important;
+  font-weight: bold;
+  background: rgba(0,123,255,0.10);
+  border-radius: 6px;
+}
+.sidebar-link:hover {
+  background: #f1f3f7;
+  color: #007bff;
+}
+
+.app-sidebar__heading {
+  font-size: 1.08rem;
+  font-weight: bold;
+  color: #888;
+  margin-bottom: 14px;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+  padding-left: 22px;
+}
+
+.sidebar-logout {
+  margin-top: 2rem;
+  text-align: center;
+}
+.sidebar-logout .btn {
+  width: 90%;
+  font-size: 1rem;
+  padding: 8px 0;
+  border-radius: 5px;
+}
+
+.content-wrapper {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 32px 36px 32px 36px;
+  overflow-y: auto;
+  border-left: 1px solid #e3e6f0;
+  border-top: 1px solid #e3e6f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+@media (max-width: 1200px) {
+  .content-wrapper {
+    padding: 18px 8px;
+  }
+}
+@media (max-width: 992px) {
+  .sidebar {
+    width: 100%;
+    min-height: unset;
+    border-right: none;
+    border-bottom: 1px solid #e3e6f0;
+    box-shadow: none;
+    padding: 12px 0 10px 0;
+  }
+  .content-wrapper {
+    padding: 12px 4px;
+  }
+}
+@media (max-width: 768px) {
+  .div-content {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: unset;
+    border-right: none;
+    border-bottom: 1px solid #e3e6f0;
+    box-shadow: none;
+    padding: 8px 0 6px 0;
+  }
+  .content-wrapper {
+    margin-left: 0;
+    padding: 8px 2px;
+    border-radius: 6px;
+  }
 }

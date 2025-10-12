@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         // sau đó seed categories, và sau đó ProductSeeder sẽ seed products.
         $this->call(CategorySeeder::class);
         $this->call(ProductSeeder::class);
-
+        $this->call(AdminSeeder::class); // Seeder
         // Các seeder khác nếu có
     }
 }

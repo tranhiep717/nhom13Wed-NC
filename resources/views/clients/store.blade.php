@@ -114,7 +114,12 @@
                             <a href="{{ route('products.show', $product->slug) }}" style="text-decoration:none;color:inherit">
                                 <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                                     <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
-                                        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;">
+                                        @php
+                                            $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                                                ? asset('storage/' . $product->image_path)
+                                                : asset('img/default-product.png');
+                                        @endphp
+                                        <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                                         @if($product->is_new)
                                         <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
                                         @endif
@@ -332,7 +337,12 @@
                 <a href="{{ route('products.show', $product->slug) }}" style="text-decoration:none;color:inherit">
                     <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                         <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
-                            <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;">
+                            @php
+                                $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                                    ? asset('storage/' . $product->image_path)
+                                    : asset('img/default-product.png');
+                            @endphp
+                            <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                             @if($product->is_new)
                             <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
                             @endif

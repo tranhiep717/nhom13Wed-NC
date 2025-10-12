@@ -1,4 +1,6 @@
+@extends('admin.layout')
 
+@section('title', 'Dashboard')
 <!doctype html>
 <html lang="en">
 
@@ -7,14 +9,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Login | Admin </title>
+    <title>Login | Admin - CodeLean eShop</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-   <link type="text/css" rel="stylesheet" href="{{ asset('css/my_style.css') }}">
-    <link type="text/css" rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <meta name="description" content="CodeLean Design">
+
+    <!-- Disable tap highlight on IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <link href="./main.css" rel="stylesheet">
 </head>
 
 <body>
@@ -72,3 +75,7 @@
 </body>
 
 </html>
+
+@section('content')
+
+@endsection

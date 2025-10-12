@@ -69,7 +69,9 @@ class ProductController extends Controller
     public function show($slug)
     {
         // Tìm sản phẩm theo slug
-        $product = Product::where('slug', $slug)->firstOrFail();
+        // $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::with(['ratings.user'])->where('slug', $slug)->firstOrFail();
+
 
         // Tăng lượt xem sản phẩm
         $product->increment('views_count');
@@ -85,7 +87,17 @@ class ProductController extends Controller
         // và truyền dữ liệu sản phẩm, sản phẩm liên quan vào.
         return view('clients.product', compact('product', 'relatedProducts'));
     }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $products = Product::where('name', 'like', "%{$keyword}%")->get();
 
+        // Đã sửa: Trả về view 'clients.search-results'
+        return view('clients.search-results', [
+            'products' => $products,
+            'keyword' => $keyword
+        ]);
+    }
     // Các phương thức khác cho quản lý sản phẩm (edit, update, destroy)
     // public function edit(Product $product)
     // {
@@ -114,4 +126,23 @@ class ProductController extends Controller
     //     $product->delete();
     //     return redirect()->route('products.index')->with('success', 'Sản phẩm đã xóa thành công!');
     // }
+public function postRating(Request $request, $productId)
+{
+    $request->validate([
+        'rating' => 'required|integer|between:1,5',
+        'review' => 'nullable|string|max:1000'
+    ]);
+
+    $product = Product::findOrFail($productId);
+
+    // Check if user already rated
+    $product->ratings()->create([
+        'user_id' => auth()->id(),
+        'rating' => $request->rating,
+        'review' => $request->review
+    ]);
+
+    return redirect()->back()
+                    ->with('success', 'Đánh giá của bạn đã được ghi nhận!');
+}
 }

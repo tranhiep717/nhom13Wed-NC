@@ -28,7 +28,12 @@
             <div class="col-md-5 col-md-push-2">
                 <div id="product-main-img">
                     <div class="product-preview">
-                        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}">
+                        @php
+                            $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                                ? asset('storage/' . $product->image_path)
+                                : asset('img/default-product.png');
+                        @endphp
+                        <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:260px;border-radius:1.5rem;box-shadow:0 4px 24px #e3e3e3;object-fit:contain;background:#f8fafc;">
                     </div>
                     {{-- Nếu bạn có nhiều hình ảnh cho sản phẩm (liên kết với Product::images) --}}
                     {{-- @foreach($product->images as $image)
@@ -56,14 +61,14 @@
             <h2 class="product-name">{{ $product->name }}</h2>
             <div>
                 <div class="product-rating">
-                    @for ($i = 0; $i < $product->rating; $i++)
-                        <i class="fa fa-star"></i>
+                    @php
+                    $avgRating = $product->ratings->avg('rating');
+                    @endphp
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
                         @endfor
-                        @for ($i = $product->rating; $i < 5; $i++)
-                            <i class="fa fa-star-o"></i>
-                            @endfor
                 </div>
-                <a class="review-link" href="#">10 Đánh giá | Thêm đánh giá của bạn</a>
+                <a class="review-link" href="#tab3">{{ $product->ratings->count() }} Đánh giá </a>
             </div>
             <div>
                 <h3 class="product-price">{{ number_format($product->price) }} VNĐ <del class="product-old-price">{{ number_format($product->old_price) }} VNĐ</del></h3>
@@ -77,7 +82,7 @@
                     <span style="font-weight:600;">Cấu hình:</span>
                     <select class="input-select" name="configuration" style="min-width:120px;">
                         @foreach($product->configurations as $config)
-                            <option value="{{ $config }}">{{ $config }}</option>
+                        <option value="{{ $config }}">{{ $config }}</option>
                         @endforeach
                     </select>
                 </label>
@@ -87,7 +92,7 @@
                     <span style="font-weight:600;">Màu sắc:</span>
                     <select class="input-select" name="color" style="min-width:100px;">
                         @foreach($product->colors as $color)
-                            <option value="{{ $color }}">{{ $color }}</option>
+                        <option value="{{ $color }}">{{ $color }}</option>
                         @endforeach
                     </select>
                 </label>
@@ -130,7 +135,7 @@
             <ul class="tab-nav">
                 <li class="active"><a data-toggle="tab" href="#tab1">Mô tả</a></li>
                 <li><a data-toggle="tab" href="#tab2">Chi tiết</a></li>
-                <li><a data-toggle="tab" href="#tab3">Đánh giá (3)</a></li>
+                <li><a data-toggle="tab" href="#tab3">Đánh giá ({{ $product->ratings->count() }})</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab1" class="tab-pane fade in active">
@@ -152,163 +157,91 @@
                         <div class="col-md-3">
                             <div id="rating">
                                 <div class="rating-avg">
-                                    <span>4.5</span>
+                                    <span>{{ number_format($product->ratings->avg('rating'), 1) }}</span>
                                     <div class="rating-stars">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        @php
+                                        $avgRating = $product->ratings->avg('rating');
+                                        @endphp
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
+                                            @endfor
                                     </div>
                                 </div>
                                 <ul class="rating">
+                                    @for($i = 5; $i >= 1; $i--)
                                     <li>
                                         <div class="rating-stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                            @for($j = 1; $j <= 5; $j++)
+                                                <i class="fa fa-star{{ $j <= $i ? '' : '-o' }}"></i>
+                                                @endfor
                                         </div>
                                         <div class="rating-progress">
-                                            <div style="width: 80%;"></div>
+                                            @php
+                                            $count = $product->ratings->where('rating', $i)->count();
+                                            $total = $product->ratings->count();
+                                            $percent = $total > 0 ? ($count / $total) * 100 : 0;
+                                            @endphp
+                                            <div style="width: {{ $percent }}%;"></div>
                                         </div>
-                                        <span class="sum">3</span>
+                                        <span class="sum">{{ $count }}</span>
                                     </li>
-                                    <li>
-                                        <div class="rating-stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="rating-progress">
-                                            <div style="width: 60%;"></div>
-                                        </div>
-                                        <span class="sum">2</span>
-                                    </li>
-                                    <li>
-                                        <div class="rating-stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="rating-progress">
-                                            <div></div>
-                                        </div>
-                                        <span class="sum">0</span>
-                                    </li>
-                                    <li>
-                                        <div class="rating-stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="rating-progress">
-                                            <div></div>
-                                        </div>
-                                        <span class="sum">0</span>
-                                    </li>
-                                    <li>
-                                        <div class="rating-stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <div class="rating-progress">
-                                            <div></div>
-                                        </div>
-                                        <span class="sum">0</span>
-                                    </li>
+                                    @endfor
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div id="reviews">
                                 <ul class="reviews">
+                                    @forelse($product->ratings as $rating)
                                     <li>
                                         <div class="review-heading">
-                                            <h5 class="name">John</h5>
-                                            <p class="date">27 DEC 2018, 8:0 PM</p>
+                                            <h5 class="name">{{ $rating->user->name }}</h5>
+                                            <p class="date">{{ $rating->created_at->format('d M Y, g:i A') }}</p>
                                             <div class="review-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <i class="fa fa-star{{ $i <= $rating->rating ? '' : '-o' }}"></i>
+                                                    @endfor
                                             </div>
                                         </div>
                                         <div class="review-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                            <p>{{ $rating->review }}</p>
                                         </div>
                                     </li>
-                                    <li>
-                                        <div class="review-heading">
-                                            <h5 class="name">John</h5>
-                                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                                            <div class="review-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="review-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="review-heading">
-                                            <h5 class="name">John</h5>
-                                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                                            <div class="review-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="review-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <ul class="reviews-pagination">
-                                    <li class="active">1</li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                                    @empty
+                                    <li>Chưa có đánh giá nào cho sản phẩm này</li>
+                                    @endforelse
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div id="review-form">
-                                <form class="review-form">
-                                    <input class="input" type="text" placeholder="Tên của bạn">
-                                    <input class="input" type="email" placeholder="Email của bạn">
-                                    <textarea class="input" placeholder="Đánh giá của bạn"></textarea>
+                                @auth
+                                <form action="{{ route('products.rating', $product->id) }}" method="POST" class="review-form">
+                                    @csrf
+                                    @if(session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                    @endif
+
                                     <div class="input-rating">
                                         <span>Xếp hạng của bạn: </span>
                                         <div class="stars">
-                                            <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+                                            <input id="star5" name="rating" value="5" type="radio" required><label for="star5"></label>
                                             <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
                                             <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
                                             <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
                                             <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
                                         </div>
                                     </div>
-                                    <button class="primary-btn">Gửi</button>
+
+                                    <textarea name="review" class="input" placeholder="Nhận xét của bạn"></textarea>
+
+                                    <button type="submit" class="primary-btn">Gửi đánh giá</button>
                                 </form>
+                                @else
+                                <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sản phẩm</p>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -330,48 +263,54 @@
             </div>
             @if(isset($relatedProducts) && $relatedProducts->count() > 0)
             @foreach ($relatedProducts as $relatedProduct)
-            <div class="col-md-3 col-xs-6">
-                <div class="product" style="position:relative">
-                    <a href="{{ route('products.show', $relatedProduct->slug) }}" class="stretched-link" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;"></a>
-                    <div class="product-img">
-                        <img src="{{ asset('storage/' . $relatedProduct->image_path) }}" alt="{{ $relatedProduct->name }}">
-                        @if($relatedProduct->is_new)
-                        <div class="product-label">
-                            <span class="new">MỚI</span>
-                        </div>
-                        @endif
-                        @if($relatedProduct->discount_percentage > 0)
-                        <div class="product-label">
-                            <span class="sale">-{{ $relatedProduct->discount_percentage }}%</span>
-                        </div>
-                        @endif
-                    </div>
-                    <div class="product-body">
-                        <p class="product-category">{{ $relatedProduct->category->name ?? 'Không có danh mục' }}</p>
-                        <h3 class="product-name"><a href="{{ route('products.show', $relatedProduct->slug) }}">{{ $relatedProduct->name }}</a></h3>
-                        <h4 class="product-price">{{ number_format($relatedProduct->price) }} VNĐ
-                            @if($relatedProduct->old_price)
-                            <del class="product-old-price">{{ number_format($relatedProduct->old_price) }} VNĐ</del>
+            <div class="col-md-3 col-xs-6 mb-4">
+                <a href="{{ route('products.show', $relatedProduct->slug) }}" style="display:block;height:100%;text-decoration:none;color:inherit">
+                    <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+                        <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
+                            @php
+                                $imagePath = $relatedProduct->image_path && file_exists(public_path('storage/' . $relatedProduct->image_path))
+                                    ? asset('storage/' . $relatedProduct->image_path)
+                                    : asset('img/default-product.png');
+                            @endphp
+                            <img src="{{ $imagePath }}" alt="{{ $relatedProduct->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
+                            @if($relatedProduct->is_new)
+                            <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
                             @endif
-                        </h4>
-                        <div class="product-rating">
-                            @for ($i = 0; $i < $relatedProduct->rating; $i++)
-                                <i class="fa fa.fa-star"></i>
-                                @endfor
-                                @for ($i = $relatedProduct->rating; $i < 5; $i++)
-                                    <i class="fa fa-star-o"></i>
+                            @if($relatedProduct->discount_percentage > 0)
+                            <div class="product-label" style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">-{{ $relatedProduct->discount_percentage }}%</div>
+                            @endif
+                        </div>
+                        <div class="product-body" style="padding:18px 24px 0 24px;">
+                            <p class="product-category" style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">{{ $relatedProduct->category->name ?? 'N/A' }}</p>
+                            <h3 class="product-name" style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;">{{ $relatedProduct->name }}</h3>
+                            <h4 class="product-price" style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">{{ number_format($relatedProduct->price) }} VNĐ @if($relatedProduct->old_price) <del class="product-old-price" style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($relatedProduct->old_price) }} VNĐ</del>@endif</h4>
+                            <div class="product-rating" style="margin-bottom:8px;">
+                                @for ($i = 0; $i < $relatedProduct->rating; $i++)
+                                    <i class="fa fa-star" style="color:#ffc107;"></i>
                                     @endfor
+                                    @for ($i = $relatedProduct->rating; $i < 5; $i++)
+                                        <i class="fa fa-star-o" style="color:#ffc107;"></i>
+                                        @endfor
+                                        <span style="color:#888;font-size:13px;margin-left:4px;">({{ $relatedProduct->ratings_count ?? 0 }})</span>
+                            </div>
+                            <div class="product-btns mb-2" style="display:flex;gap:8px;">
+                                <button class="add-to-wishlist" style="background:transparent;border:none;"><i class="fa fa-heart-o" style="color:#d10024;"></i></button>
+                                <button class="add-to-compare" style="background:transparent;border:none;"><i class="fa fa-exchange" style="color:#1976d2;"></i></button>
+                                <button class="quick-view" style="background:transparent;border:none;"><i class="fa fa-eye" style="color:#222;"></i></button>
+                            </div>
                         </div>
-                        <div class="product-btns">
-                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">thêm vào danh sách yêu thích</span></button>
-                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">thêm vào so sánh</span></button>
-                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">xem nhanh</span></button>
+                        <div class="add-to-cart" style="padding:0 24px 18px 24px;">
+                            <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" style="display:flex;align-items:center;gap:10px;">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="add-to-cart-btn" style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
+                                    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    <div class="add-to-cart">
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> thêm vào giỏ hàng</button>
-                    </div>
-                </div>
+                </a>
             </div>
             @endforeach
             @else
@@ -406,18 +345,23 @@
 </div>
 
 @if(session('success'))
-<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+<div id="success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
     <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
         <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
-            <i class="fa fa-shopping-cart"></i> <i class="fa fa-check" style="color:#4caf50;"></i>
+            <i class="fa fa-check" style="color:#4caf50;"></i>
         </div>
         <div style="font-size:20px;font-weight:500;margin-bottom:16px;">{{ session('success') }}</div>
-        <a href="{{ route('cart.index') }}" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
+        <button onclick="closeModal()" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;border:none;cursor:pointer;">Đóng</button>
     </div>
 </div>
+
 <script>
+    function closeModal() {
+        document.getElementById('success-modal').style.display = 'none';
+    }
+
     setTimeout(function() {
-        document.getElementById('cart-success-modal').style.display = 'none';
+        document.getElementById('success-modal').style.display = 'none';
     }, 2000);
 </script>
 @endif
@@ -425,33 +369,34 @@
 
 @push('scripts')
 <script>
-$(document).ready(function() {
-    $('.add-to-cart-form').on('submit', function(e) {
-        e.preventDefault();
-        var form = $(this);
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: form.serialize(),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(res) {
-                showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
-            },
-            error: function(xhr) {
-                if (xhr.status === 401) {
-                    window.location.href = '/login';
-                } else {
-                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+    $(document).ready(function() {
+        $('.add-to-cart-form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res) {
+                    showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        window.location.href = '/login';
+                    } else {
+                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                    }
                 }
-            }
+            });
         });
     });
-});
-function showCartSuccessModal(msg) {
-    if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
-    var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+
+    function showCartSuccessModal(msg) {
+        if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
+        var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
         <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
             <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
                 <i class='fa fa-shopping-cart'></i> <i class='fa fa-check' style='color:#4caf50;'></i>
@@ -460,12 +405,12 @@ function showCartSuccessModal(msg) {
             <a href="/cart" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
         </div>
     </div>`;
-    $('body').append(html);
-    setTimeout(function() {
-        $('#cart-success-modal').fadeOut(300, function() {
-            $(this).remove();
-        });
-    }, 2000);
-}
+        $('body').append(html);
+        setTimeout(function() {
+            $('#cart-success-modal').fadeOut(300, function() {
+                $(this).remove();
+            });
+        }, 2000);
+    }
 </script>
 @endpush
