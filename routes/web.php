@@ -91,6 +91,7 @@ Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'
 Route::post('/wishlist/add', [App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
 // Xoá sản phẩm khỏi wishlist (AJAX)
 Route::post('/wishlist/remove', [App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove')->middleware('auth');
+Route::post('/wishlist/remove-multi', [App\Http\Controllers\WishlistController::class, 'removeMulti'])->name('wishlist.remove-multi')->middleware('auth');
 
 require __DIR__ . '/auth.php';
 

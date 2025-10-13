@@ -35,6 +35,23 @@ class WishlistController extends Controller
         $user->wishlist()->detach($productId);
         return response()->json(['success' => true, 'removed' => true]);
     }
+    public function removeMulti(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để sử dụng wishlist!'], 401);
+        }
+        $user = Auth::user();
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Không có sản phẩm nào được chọn!'], 400);
+        }
+        $user->wishlist()->detach($ids);
+        // Nếu là request AJAX thì trả về JSON, nếu không thì redirect lại
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'removed' => true]);
+        }
+        return redirect()->route('wishlist.index')->with('success', 'Đã xoá các sản phẩm đã chọn khỏi danh sách yêu thích!');
+    }
     public function index()
     {
         $user = Auth::user();
