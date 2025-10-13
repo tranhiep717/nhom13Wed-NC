@@ -3,12 +3,6 @@
 @section('title', 'home')
 
 @section('content')
-@php
-$wishlistIds = [];
-if(auth()->check()) {
-$wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
-}
-@endphp
 <div class="section">
     <div class="container">
         <div class="row">
@@ -72,19 +66,15 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                 <div class="row">
                     <div class="products-slick" data-nav="#slick-nav-1">
                         @foreach($newProducts as $product)
-                        @php
-                        $isWished = in_array($product->id, $wishlistIds);
-                        @endphp
                         <a href="{{ route('products.show', $product->slug) }}"
-                            style="display:block;height:100%;text-decoration:none;color:inherit;position:relative;">
+                            style="display:block;height:100%;text-decoration:none;color:inherit;">
                             <div class="product"
                                 style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
                                 <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                                     @php
-                                    $imagePath = $product->image_path && file_exists(public_path('storage/' .
-                                    $product->image_path))
-                                    ? asset('storage/' . $product->image_path)
-                                    : asset('img/default-product.png');
+                                        $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                                            ? asset('storage/' . $product->image_path)
+                                            : asset('img/default-product.png');
                                     @endphp
                                     <img src="{{ $imagePath }}" alt="{{ $product->name }}"
                                         style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
@@ -116,23 +106,21 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                             VNĐ</del>@endif
                                     </h4>
                                     <div class="product-rating" style="margin-bottom:8px;">
-                                        @php $avgRating = $product->ratings->avg('rating'); @endphp
+                                        @php $avgRating = $product->averageRating(); @endphp
                                         @for($i = 1; $i <= 5; $i++) <i
                                             class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}" style="color:#ffc107;">
                                             </i>
                                             @endfor
                                             <span
-                                                style="color:#888;font-size:13px;margin-left:4px;">({{ $product->ratings->count() }})</span>
+                                                style="color:#888;font-size:13px;margin-left:4px;">({{ number_format($product->averageRating(), 1) }})</span>
                                     </div>
-                                    <div class="product-btns mb-2"
-                                        style="display:flex;gap:8px;position:absolute;left:12px;bottom:12px;z-index:3;">
-                                        <button class="add-to-wishlist wishlist-btn{{ $isWished ? ' added' : '' }}"
-                                            data-product-id="{{ $product->id }}"
-                                            style="background:transparent;border:none;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;position:relative;z-index:3;"
-                                            tabindex="0">
-                                            <i class="fa {{ $isWished ? 'fa-heart' : 'fa-heart-o' }} wishlist-icon"
-                                                style="color:#d10024;font-size:1.5rem;transition:color 0.2s;"></i>
-                                        </button>
+                                    <div class="product-btns mb-2" style="display:flex;gap:8px;">
+                                        <button class="add-to-wishlist" style="background:transparent;border:none;"><i
+                                                class="fa fa-heart-o" style="color:#d10024;"></i></button>
+                                        <button class="add-to-compare" style="background:transparent;border:none;"><i
+                                                class="fa fa-exchange" style="color:#1976d2;"></i></button>
+                                        <button class="quick-view" style="background:transparent;border:none;"><i
+                                                class="fa fa-eye" style="color:#222;"></i></button>
                                     </div>
                                 </div>
                                 <div class="add-to-cart" style="padding:0 24px 18px 24px;">

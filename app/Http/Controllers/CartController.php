@@ -16,9 +16,6 @@ class CartController extends Controller
     public function add(Request $request)
     {
         if (!Auth::check()) {
-            if ($request->ajax()) {
-                return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để thêm vào giỏ hàng'], 401);
-            }
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thêm vào giỏ hàng');
         }
         $cart = CartItem::where('user_id', Auth::id())
@@ -36,9 +33,6 @@ class CartController extends Controller
             ]);
         }
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Đã thêm vào giỏ hàng']);
-        }
         return back()->with('success', 'Đã thêm vào giỏ hàng');
     }
 

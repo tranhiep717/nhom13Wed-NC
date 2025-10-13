@@ -87,20 +87,47 @@ class Product extends Model
             }
         });
     }
+
+    // Quan hệ với Rating (đã có)
     public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    // Quan hệ với Review (dữ liệu mẫu)
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    // Lấy 5 reviews ngẫu nhiên cho sản phẩm
+    public function getRandomReviews($min = 7, $max = 10)
 {
-    return $this->hasMany(Rating::class);
+    // Lấy số lượng review ngẫu nhiên trong khoảng từ $min đến $max
+    $limit = rand($min, $max);
+
+    // Lấy review mẫu liên kết với sản phẩm
+    return $this->reviews()->inRandomOrder()->limit($limit)->get();
 }
 
-public function averageRating()
-{
-    return $this->ratings()->avg('rating') ?? 0;
-}
+    // Tính rating trung bình từ cả Rating và Review
+    public function averageRating()
+    {
+        $ratingsAvg = $this->ratings()->avg('rating') ?? 0;
+        $reviewsAvg = $this->reviews()->avg('rating') ?? 0;
 
-    // Có thể thêm Accessor để đảm bảo image_path luôn có giá trị hợp lệ
-    // public function getImagePathAttribute($value)
-    // {
-    //     // Đây là ví dụ, bạn có thể điều chỉnh đường dẫn mặc định
-    //     return $value ? asset('storage/' . $value) : asset('img/default-product.png');
-    // }
+        // Nếu có cả 2 loại đánh giá, tính trung bình cộng
+        if ($ratingsAvg > 0 && $reviewsAvg > 0) {
+            return ($ratingsAvg + $reviewsAvg) / 2;
+        }
+
+        // Nếu chỉ có 1 loại, return loại đó
+        return $ratingsAvg > 0 ? $ratingsAvg : $reviewsAvg;
+    }
+
+    // Đếm tổng số đánh giá từ cả Rating và Review
+    public function totalReviewsCount()
+    {
+        return $this->ratings()->count() + $this->reviews()->count();
+    }
 }

@@ -63,45 +63,36 @@ class PageController extends Controller
 
     public function checkout(Request $request)
     {
-        // Ưu tiên lấy sản phẩm từ wishlist nếu có product_ids
-        $productIds = collect(explode(',', $request->query('product_ids', '')))->filter();
-        $selectedProducts = collect();
-        $total = 0;
+        // Lấy tất cả cart item của user nếu không truyền cart_items trên URL
+        $cartItemIds = collect(explode(',', $request->query('cart_items', '')))->filter();
+        $total = $request->query('total', 0);
+        $selectedCartItems = collect();
         $cartCount = 0;
         if (auth()->check()) {
             $cartCount = \App\Models\CartItem::where('user_id', auth()->id())->sum('quantity');
-            if ($productIds->count() > 0) {
-                $selectedProducts = \App\Models\Product::whereIn('id', $productIds)->get();
-                $selectedProducts = $selectedProducts->map(function ($p) {
-                    $p->quantity = 1;
-                    return $p;
-                });
-                $total = $selectedProducts->sum(function ($item) {
-                    return $item->price;
+            // Nếu không truyền cart_items, lấy toàn bộ cart của user
+            if ($cartItemIds->count() === 0) {
+                $selectedCartItems = \App\Models\CartItem::with('product')
+                    ->where('user_id', auth()->id())
+                    ->get();
+                $total = $selectedCartItems->sum(function($item) {
+                    return $item->product ? $item->product->price * $item->quantity : 0;
                 });
             } else {
-                // Nếu không truyền cart_items, lấy toàn bộ cart của user
-                $cartItemIds = collect(explode(',', $request->query('cart_items', '')))->filter();
-                if ($cartItemIds->count() === 0) {
-                    $selectedProducts = \App\Models\CartItem::with('product')
-                        ->where('user_id', auth()->id())
-                        ->get();
-                    $total = $selectedProducts->sum(function ($item) {
-                        return $item->product ? $item->product->price * $item->quantity : 0;
-                    });
-                } else {
-                    $selectedProducts = \App\Models\CartItem::with('product')
-                        ->where('user_id', auth()->id())
-                        ->whereIn('id', $cartItemIds)
-                        ->get();
-                    $total = $selectedProducts->sum(function ($item) {
+                $selectedCartItems = \App\Models\CartItem::with('product')
+                    ->where('user_id', auth()->id())
+                    ->whereIn('id', $cartItemIds)
+                    ->get();
+                // Nếu total không truyền lên, tự tính lại
+                if (!$total || $total == 0) {
+                    $total = $selectedCartItems->sum(function($item) {
                         return $item->product ? $item->product->price * $item->quantity : 0;
                     });
                 }
             }
         }
         return view('clients.checkout', [
-            'selectedCartItems' => $selectedProducts,
+            'selectedCartItems' => $selectedCartItems,
             'selectedTotal' => $total,
             'cartCount' => $cartCount
         ]);
@@ -112,18 +103,15 @@ class PageController extends Controller
         return view('clients.blank');
     }
 
-    public function login()
-    {
+    public function login() {
         return view('clients.login');
     }
 
-    public function register()
-    {
+    public function register() {
         return view('clients.register');
     }
 
-    public function dashboard()
-    {
+    public function dashboard() {
         return view('dashboard');
     }
 }

@@ -67,26 +67,25 @@ class ProductController extends Controller
 
     // PHƯƠNG THỨC HIỂN THỊ CHI TIẾT SẢN PHẨM: Đã sửa để dùng slug
     public function show($slug)
-    {
-        // Tìm sản phẩm theo slug
-        // $product = Product::where('slug', $slug)->firstOrFail();
-        $product = Product::with(['ratings.user'])->where('slug', $slug)->firstOrFail();
+{
+    // Tìm sản phẩm theo slug
+    $product = Product::with(['ratings.user'])->where('slug', $slug)->firstOrFail();
 
+    // Tăng lượt xem sản phẩm
+    $product->increment('views_count');
 
-        // Tăng lượt xem sản phẩm
-        $product->increment('views_count');
+    // Lấy từ 7 đến 10 review mẫu ngẫu nhiên
+    $randomReviews = $product->getRandomReviews(7, 10);
 
-        // Lấy sản phẩm liên quan (cùng danh mục, không phải sản phẩm hiện tại)
-        $relatedProducts = Product::where('category_id', $product->category_id)
-                                ->where('id', '!=', $product->id)
-                                ->inRandomOrder() // Hiển thị ngẫu nhiên
-                                ->take(4) // Lấy 4 sản phẩm liên quan
-                                ->get();
+    // Lấy sản phẩm liên quan
+    $relatedProducts = Product::where('category_id', $product->category_id)
+                            ->where('id', '!=', $product->id)
+                            ->inRandomOrder()
+                            ->take(4)
+                            ->get();
 
-        // Trả về view 'clients.product' (hoặc 'product' nếu bạn giữ thư mục gốc cho views)
-        // và truyền dữ liệu sản phẩm, sản phẩm liên quan vào.
-        return view('clients.product', compact('product', 'relatedProducts'));
-    }
+    return view('clients.product', compact('product', 'relatedProducts', 'randomReviews'));
+}
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
@@ -139,7 +138,7 @@ public function postRating(Request $request, $productId)
     $product->ratings()->create([
         'user_id' => auth()->id(),
         'rating' => $request->rating,
-        'review' => $request->review
+        'comment' => $request->review
     ]);
 
     return redirect()->back()

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null'); // Khóa ngoại tới bảng users (nếu có)
             $table->unsignedTinyInteger('rating')->default(0); // Điểm đánh giá (ví dụ: từ 0-5)
             $table->text('comment')->nullable(); // Nội dung đánh giá
-            $table->timestamps(); // created_at và updated_at
+            $table->timestamps(); // Thêm cả created_at và updated_at
         });
     }
 

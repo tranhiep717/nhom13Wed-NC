@@ -137,4 +137,9 @@ class OrderController extends Controller
             return redirect()->back()->withInput()->with('error', 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại. Lỗi: ' . $e->getMessage());
         }
     }
+    public function show($id)
+{
+    $order = Order::with('items')->findOrFail($id); // Lấy đơn hàng và các sản phẩm liên quan
+    return view('orders.show', compact('order'));
+}
 }

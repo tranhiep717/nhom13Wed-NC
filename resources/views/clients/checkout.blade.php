@@ -144,30 +144,25 @@
 						</div>
 						<div class="order-products">
 							@if(isset($selectedCartItems) && count($selectedCartItems) > 0)
-							@foreach($selectedCartItems as $item)
-							@php
-							$isProduct = isset($item->name) && isset($item->price) && !isset($item->product);
-							$product = $isProduct ? $item : $item->product;
-							$qty = $isProduct ? 1 : $item->quantity;
-							@endphp
-							<div class="order-col product-widget-checkout">
-								<div class="product-img-checkout">
-									<img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" style="max-width:60px;">
+								@foreach($selectedCartItems as $item)
+								<div class="order-col product-widget-checkout">
+									<div class="product-img-checkout">
+										<img src="{{ asset('storage/' . $item->product->image_path) }}" alt="{{ $item->product->name }}" style="max-width:60px;">
+									</div>
+									<div class="product-body-checkout">
+										<div class="product-name">{{ $item->quantity }}x {{ $item->product->name }}</div>
+										<div class="product-price-checkout">{{ number_format($item->product->price * $item->quantity) }} VNĐ</div>
+										@if($item->product->color)
+											<div style="font-size:13px;">Màu sắc: <span style="font-weight:600">{{ $item->product->color }}</span></div>
+										@endif
+										@if($item->product->configuration)
+											<div style="font-size:13px;">Cấu hình: <span style="font-weight:600">{{ $item->product->configuration }}</span></div>
+										@endif
+									</div>
 								</div>
-								<div class="product-body-checkout">
-									<div class="product-name">{{ $qty }}x {{ $product->name }}</div>
-									<div class="product-price-checkout">{{ number_format($product->price * $qty) }} VNĐ</div>
-									@if($product->color)
-									<div style="font-size:13px;">Màu sắc: <span style="font-weight:600">{{ $product->color }}</span></div>
-									@endif
-									@if($product->configuration)
-									<div style="font-size:13px;">Cấu hình: <span style="font-weight:600">{{ $product->configuration }}</span></div>
-									@endif
-								</div>
-							</div>
-							@endforeach
+								@endforeach
 							@else
-							<div>Không có sản phẩm nào được chọn.</div>
+								<div>Không có sản phẩm nào được chọn.</div>
 							@endif
 						</div>
 						<div class="form-group">
@@ -279,68 +274,68 @@
 	</div>
 </div>
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		// Lấy giá trị từ query string (hoặc từ biến Blade nếu PageController đã truyền vào)
-		const urlParams = new URLSearchParams(window.location.search);
-		const cartItemsParam = urlParams.get('cart_items');
-		const totalParam = urlParams.get('total');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy giá trị từ query string (hoặc từ biến Blade nếu PageController đã truyền vào)
+        const urlParams = new URLSearchParams(window.location.search);
+        const cartItemsParam = urlParams.get('cart_items');
+        const totalParam = urlParams.get('total');
 
-		// Gán vào hidden inputs trong form
-		const selectedCartItemsInput = document.getElementById('selected_cart_items_ids_checkout');
-		const totalAmountInput = document.getElementById('total_amount_checkout');
+        // Gán vào hidden inputs trong form
+        const selectedCartItemsInput = document.getElementById('selected_cart_items_ids_checkout');
+        const totalAmountInput = document.getElementById('total_amount_checkout');
 
-		if (selectedCartItemsInput) {
-			selectedCartItemsInput.value = cartItemsParam || '';
-		}
-		if (totalAmountInput) {
-			totalAmountInput.value = totalParam || '0';
-		}
+        if (selectedCartItemsInput) {
+            selectedCartItemsInput.value = cartItemsParam || '';
+        }
+        if (totalAmountInput) {
+            totalAmountInput.value = totalParam || '0';
+        }
 
-		// Đảm bảo bank details chỉ hiển thị khi chọn
-		$('input[name="payment_method"]').on('change', function() {
-			if ($(this).val() === 'bank_transfer') {
-				$('#bank-details').slideDown();
-			} else {
-				$('#bank-details').slideUp();
-			}
-		});
+        // Đảm bảo bank details chỉ hiển thị khi chọn
+        $('input[name="payment_method"]').on('change', function() {
+            if ($(this).val() === 'bank_transfer') {
+                $('#bank-details').slideDown();
+            } else {
+                $('#bank-details').slideUp();
+            }
+        });
 
-		// Gọi hàm ngay khi load trang nếu #payment-1 đang checked
-		if ($('#payment-1').is(':checked')) {
-			$('#bank-details').show();
-		}
+        // Gọi hàm ngay khi load trang nếu #payment-1 đang checked
+        if ($('#payment-1').is(':checked')) {
+            $('#bank-details').show();
+        }
 
-		// Xử lý hiển thị/ẩn trường địa chỉ giao hàng khác
-		$('#shiping-address').on('change', function() {
-			if ($(this).is(':checked')) {
-				$(this).closest('.input-checkbox').find('.caption').slideDown();
-			} else {
-				$(this).closest('.input-checkbox').find('.caption').slideUp();
-			}
-		});
+        // Xử lý hiển thị/ẩn trường địa chỉ giao hàng khác
+        $('#shiping-address').on('change', function(){
+            if ($(this).is(':checked')) {
+                $(this).closest('.input-checkbox').find('.caption').slideDown();
+            } else {
+                $(this).closest('.input-checkbox').find('.caption').slideUp();
+            }
+        });
 
-		// Khởi tạo trạng thái ban đầu của địa chỉ giao hàng khác
-		if ($('#shiping-address').is(':checked')) {
-			$('#shiping-address').closest('.input-checkbox').find('.caption').show();
-		} else {
-			$('#shiping-address').closest('.input-checkbox').find('.caption').hide();
-		}
+        // Khởi tạo trạng thái ban đầu của địa chỉ giao hàng khác
+        if ($('#shiping-address').is(':checked')) {
+            $('#shiping-address').closest('.input-checkbox').find('.caption').show();
+        } else {
+            $('#shiping-address').closest('.input-checkbox').find('.caption').hide();
+        }
 
-		// Tương tự cho "Tạo tài khoản mới"
-		$('#create-account').on('change', function() {
-			if ($(this).is(':checked')) {
-				$(this).closest('.input-checkbox').find('.caption').slideDown();
-			} else {
-				$(this).closest('.input-checkbox').find('.caption').slideUp();
-			}
-		});
+        // Tương tự cho "Tạo tài khoản mới"
+        $('#create-account').on('change', function(){
+            if ($(this).is(':checked')) {
+                $(this).closest('.input-checkbox').find('.caption').slideDown();
+            } else {
+                $(this).closest('.input-checkbox').find('.caption').slideUp();
+            }
+        });
 
-		// Khởi tạo trạng thái ban đầu của "Tạo tài khoản mới"
-		if ($('#create-account').is(':checked')) {
-			$('#create-account').closest('.input-checkbox').find('.caption').show();
-		} else {
-			$('#create-account').closest('.input-checkbox').find('.caption').hide();
-		}
-	});
+        // Khởi tạo trạng thái ban đầu của "Tạo tài khoản mới"
+        if ($('#create-account').is(':checked')) {
+            $('#create-account').closest('.input-checkbox').find('.caption').show();
+        } else {
+            $('#create-account').closest('.input-checkbox').find('.caption').hide();
+        }
+    });
 </script>
 @endsection

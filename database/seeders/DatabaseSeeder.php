@@ -18,12 +18,14 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // ✅ Quan trọng: Gọi CategorySeeder trước ProductSeeder.
-        // CategorySeeder sẽ tự động truncate cả products và categories,
-        // sau đó seed categories, và sau đó ProductSeeder sẽ seed products.
+        // ✅ Quan trọng: Gọi theo thứ tự phù hợp
+        // 1. Category và Brand trước (không phụ thuộc vào gì)
+        // 2. Product sau (phụ thuộc vào category và brand)
         $this->call(CategorySeeder::class);
+        $this->call(BrandSeeder::class);
         $this->call(ProductSeeder::class);
-        $this->call(AdminSeeder::class); // Seeder
+        $this->call(AdminSeeder::class);
+        $this->call(ReviewSeeder::class); // Gọi ReviewSeeder sau cùng vì phụ thuộc vào User và Product
         // Các seeder khác nếu có
     }
 }

@@ -13,7 +13,7 @@ class Rating extends Model
         'product_id',
         'user_id',
         'rating',
-        'review'
+        'comment'
     ];
 
     public function product()

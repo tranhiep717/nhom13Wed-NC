@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone', // Added phone
+        'address', // Added address
     ];
 
     /**
@@ -46,8 +48,11 @@ class User extends Authenticatable
         ];
     }
 
-    public function wishlist()
+    /**
+     * Get the orders for the user.
+     */
+    public function orders()
     {
-        return $this->belongsToMany(\App\Models\Product::class, 'wishlists', 'user_id', 'product_id')->withTimestamps();
+        return $this->hasMany(Order::class);
     }
 }

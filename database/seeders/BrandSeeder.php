@@ -17,6 +17,15 @@ class BrandSeeder extends Seeder
             'APPLE',
             'HTC',
             'Xiaomi',
+            'DELL',
+            'HP',
+            'LENOVO',
+            'ASUS',
+            'CANON',
+            'NIKON',
+            'JBL',
+            'BOSE',
+            'GOOGLE',
         ];
         foreach ($brands as $brand) {
             Brand::updateOrCreate(

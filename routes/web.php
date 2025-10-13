@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuth;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\Request; // Đảm bảo dòng này tồn tại hoặc thêm vào
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +49,13 @@ Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('car
 // Đặt hàng
 Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [OrderController::class, 'placeOrder'])->name('checkout.placeOrder');
-Route::get('/order-success', function () {
+Route::get('/order-success', function() {
     return view('clients.order-success');
 })->name('order.success');
+
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+
 // Đánh giá sản phẩm
 Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])->name('products.rating')->middleware('auth');
 // Auth routes
@@ -59,8 +64,11 @@ Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/register', [RegisterController::class, 'register'])->name('register');
 Route::post('/register', [RegisterController::class, 'postRegister']);
 // Dashboard
-Route::get('/dashboard', function () {
-    return view('user.main');
+Route::get('/dashboard', function (Request $request) { // Thêm Request $request
+    return view('user.main', [
+        'user' => $request->user(), // Truyền dữ liệu người dùng
+        'orders' => $request->user()->orders()->latest()->get(), // Thêm orders
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 // Profile (middleware auth)
 Route::middleware('auth')->group(function () {
@@ -80,21 +88,12 @@ Route::get('/cart/minicart', [CartController::class, 'getMiniCart'])->name('cart
 
 //Route commen
 Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])
-    ->name('products.rating')
-    ->middleware('auth');
+     ->name('products.rating')
+     ->middleware('auth');
 Route::get('/products/{slug}', [ProductController::class, 'show'])
-    ->name('products.show');
-
-// Thêm route hiển thị giao diện danh sách yêu thích
-Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
-// Thêm sản phẩm vào wishlist (AJAX)
-Route::post('/wishlist/add', [App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
-// Xoá sản phẩm khỏi wishlist (AJAX)
-Route::post('/wishlist/remove', [App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove')->middleware('auth');
-Route::post('/wishlist/remove-multi', [App\Http\Controllers\WishlistController::class, 'removeMulti'])->name('wishlist.remove-multi')->middleware('auth');
+->name('products.show');
 
 require __DIR__ . '/auth.php';
-
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
