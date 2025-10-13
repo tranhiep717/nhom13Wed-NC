@@ -3,6 +3,12 @@
 @section('title', $product->name ?? 'Chi tiết sản phẩm') {{-- Cập nhật tiêu đề trang --}}
 
 @section('content')
+@php
+$wishlistIds = [];
+if(auth()->check()) {
+$wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
+}
+@endphp
 <div id="breadcrumb" class="section">
     <div class="container">
         <div class="row">
@@ -29,9 +35,9 @@
                 <div id="product-main-img">
                     <div class="product-preview">
                         @php
-                            $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
-                                ? asset('storage/' . $product->image_path)
-                                : asset('img/default-product.png');
+                        $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                        ? asset('storage/' . $product->image_path)
+                        : asset('img/default-product.png');
                         @endphp
                         <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:260px;border-radius:1.5rem;box-shadow:0 4px 24px #e3e3e3;object-fit:contain;background:#f8fafc;">
                     </div>
@@ -111,7 +117,12 @@
             </div>
 
             <ul class="product-btns">
-                <li><a href="#"><i class="fa fa-heart-o"></i> thêm vào danh sách yêu thích</a></li>
+                <li><a href="#" class="wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
+                        data-product-id="{{ $product->id }}"
+                        style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;">
+                        <i class="fa {{ in_array($product->id, $wishlistIds) ? 'fa-heart' : 'fa-heart-o' }} wishlist-icon"
+                            style="color:#d10024;font-size:1.5rem;transition:color 0.2s;"></i>
+                    </a> thêm vào danh sách yêu thích</li>
                 <li><a href="#"><i class="fa fa-exchange"></i> thêm vào so sánh</a></li>
             </ul>
 
@@ -268,9 +279,9 @@
                     <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
                         <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                             @php
-                                $imagePath = $relatedProduct->image_path && file_exists(public_path('storage/' . $relatedProduct->image_path))
-                                    ? asset('storage/' . $relatedProduct->image_path)
-                                    : asset('img/default-product.png');
+                            $imagePath = $relatedProduct->image_path && file_exists(public_path('storage/' . $relatedProduct->image_path))
+                            ? asset('storage/' . $relatedProduct->image_path)
+                            : asset('img/default-product.png');
                             @endphp
                             <img src="{{ $imagePath }}" alt="{{ $relatedProduct->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                             @if($relatedProduct->is_new)
@@ -294,7 +305,13 @@
                                         <span style="color:#888;font-size:13px;margin-left:4px;">({{ $relatedProduct->ratings_count ?? 0 }})</span>
                             </div>
                             <div class="product-btns mb-2" style="display:flex;gap:8px;">
-                                <button class="add-to-wishlist" style="background:transparent;border:none;"><i class="fa fa-heart-o" style="color:#d10024;"></i></button>
+                                <button class="add-to-wishlist wishlist-btn{{ in_array($relatedProduct->id, $wishlistIds) ? ' added' : '' }}"
+                                    data-product-id="{{ $relatedProduct->id }}"
+                                    style="background:transparent;border:none;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;"
+                                    tabindex="0">
+                                    <i class="fa {{ in_array($relatedProduct->id, $wishlistIds) ? 'fa-heart' : 'fa-heart-o' }} wishlist-icon"
+                                        style="color:#d10024;font-size:1.5rem;transition:color 0.2s;"></i>
+                                </button>
                                 <button class="add-to-compare" style="background:transparent;border:none;"><i class="fa fa-exchange" style="color:#1976d2;"></i></button>
                                 <button class="quick-view" style="background:transparent;border:none;"><i class="fa fa-eye" style="color:#222;"></i></button>
                             </div>
@@ -414,3 +431,19 @@
     }
 </script>
 @endpush
+
+<style>
+    .wishlist-btn:hover {
+        background: #ffe4ec !important;
+        box-shadow: 0 4px 16px #f8bbd0;
+    }
+
+    .wishlist-btn:active {
+        background: #ffd6e3 !important;
+    }
+
+    .wishlist-icon:hover {
+        color: #ff4081 !important;
+        transform: scale(1.2);
+    }
+</style>

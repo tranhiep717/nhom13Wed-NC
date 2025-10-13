@@ -48,7 +48,7 @@ Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('car
 // Đặt hàng
 Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [OrderController::class, 'placeOrder'])->name('checkout.placeOrder');
-Route::get('/order-success', function() {
+Route::get('/order-success', function () {
     return view('clients.order-success');
 })->name('order.success');
 // Đánh giá sản phẩm
@@ -80,14 +80,22 @@ Route::get('/cart/minicart', [CartController::class, 'getMiniCart'])->name('cart
 
 //Route commen
 Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])
-     ->name('products.rating')
-     ->middleware('auth');
+    ->name('products.rating')
+    ->middleware('auth');
 Route::get('/products/{slug}', [ProductController::class, 'show'])
-->name('products.show');
+    ->name('products.show');
+
+// Thêm route hiển thị giao diện danh sách yêu thích
+Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
+// Thêm sản phẩm vào wishlist (AJAX)
+Route::post('/wishlist/add', [App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
+// Xoá sản phẩm khỏi wishlist (AJAX)
+Route::post('/wishlist/remove', [App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove')->middleware('auth');
 
 require __DIR__ . '/auth.php';
+
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\UserController; 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -147,4 +155,3 @@ Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
 Route::get('/admin', function () {
     return view('admin.welcome');
 })->name('admin.welcome');
-

@@ -43,19 +43,24 @@
 				</div>
 				<div class="col-md-6">
 					<div class="header-search">
-        				<form action="{{ route('products.search') }}" method="GET" class="header-search-form">
-            				<input class="input" name="keyword" placeholder="Nhập từ khóa..." />
-            				<button class="search-btn">Tìm kiếm</button>
-        				</form>
-    				</div>
+						<form action="{{ route('products.search') }}" method="GET" class="header-search-form">
+							<input class="input" name="keyword" placeholder="Nhập từ khóa..." />
+							<button class="search-btn">Tìm kiếm</button>
+						</form>
+					</div>
 				</div>
 				<div class="col-md-3 clearfix">
 					<div class="header-ctn">
 						<div>
-							<a href="#">
+							<a href="{{ route('wishlist.index') }}">
 								<i class="fa fa-heart-o"></i>
 								<span>Danh sách yêu thích</span>
-								<div class="qty">2</div>
+								@php
+								$wishlistCount = auth()->check() ? auth()->user()->wishlist()->count() : 0;
+								@endphp
+								@if($wishlistCount > 0)
+								<div class="qty" style="background:#d10024;color:#fff;position:absolute;top:-8px;right:-8px;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;z-index:2;">{{ $wishlistCount }}</div>
+								@endif
 							</a>
 						</div>
 						<div class="dropdown">
@@ -66,9 +71,9 @@
 							</a>
 							<div class="cart-dropdown" id="minicart-content" style="display:none;">
 								@php
-									// Lấy dữ liệu cart cho partial (nếu chưa có thì truyền mảng rỗng)
-									$cart = isset($cart) ? $cart : [];
-									$cartTotal = isset($cartTotal) ? $cartTotal : 0;
+								// Lấy dữ liệu cart cho partial (nếu chưa có thì truyền mảng rỗng)
+								$cart = isset($cart) ? $cart : [];
+								$cartTotal = isset($cartTotal) ? $cartTotal : 0;
 								@endphp
 								@include('partials.minicart', ['cart' => $cart, 'cartTotal' => $cartTotal])
 							</div>

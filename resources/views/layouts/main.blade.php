@@ -38,6 +38,8 @@
     <script src="{{ asset('js/jquery.zoom.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/checkout.js') }}"></script>
+    <script src="{{ asset('js/wishlist.js') }}"></script>
+    <script src="{{ asset('js/wishlist-badge.js') }}"></script>
 </body>
 
 </html>
@@ -46,7 +48,7 @@
         <i class="fa fa-shopping-cart"></i>
         Giỏ hàng của bạn
         @if(isset($cartCount) && $cartCount > 0)
-            <span class="cart-qty-badge" style="position:absolute;top:-8px;right:-18px;background:#d10024;color:#fff;border-radius:50%;padding:2px 7px;font-size:13px;">{{ $cartCount }}</span>
+        <span class="cart-qty-badge" style="position:absolute;top:-8px;right:-18px;background:#d10024;color:#fff;border-radius:50%;padding:2px 7px;font-size:13px;">{{ $cartCount }}</span>
         @endif
     </a>
 </li>
