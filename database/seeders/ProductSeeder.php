@@ -472,9 +472,12 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        foreach ($productsData as $productData) {
-            Product::create($productData);
+        foreach ($productsData as $data) {
+            Product::create($data);
         }
+
+        // Thêm 1400 sản phẩm tự động bằng factory
+        Product::factory()->count(1400)->create();
 
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // Bỏ dòng này
     }

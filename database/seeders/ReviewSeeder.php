@@ -17,36 +17,18 @@ class ReviewSeeder extends Seeder
     {
         // Lấy danh sách sản phẩm có sẵn
         $products = Product::all();
+        $users = User::all();
 
         if ($products->isEmpty()) {
             $this->command->warn('Cần có dữ liệu Product trước khi tạo Review');
             return;
         }
+        if ($users->isEmpty()) {
+            $this->command->warn('Cần có dữ liệu User trước khi tạo Review');
+            return;
+        }
 
-        // 24 tên user mẫu
-        $userNames = [
-            'Nguyễn Văn An', 'Trần Thị Bình', 'Lê Hoàng Cường', 'Phạm Thị Dung',
-            'Hoàng Văn Em', 'Vũ Thị Phương', 'Đặng Minh Giang', 'Bùi Thị Hoa',
-            'Ngô Văn Inh', 'Dương Thị Kim', 'Lý Văn Long', 'Tạ Thị Mai',
-            'Võ Minh Nam', 'Chu Thị Oanh', 'Đinh Văn Phúc', 'Lưu Thị Quỳnh',
-            'Phan Văn Rồng', 'Đỗ Thị Sương', 'Trịnh Văn Tùng', 'Hồ Thị Uyên',
-            'Lê Văn Vũ', 'Nguyễn Thị Xuân', 'Trần Văn Yên', 'Phạm Thị Zara'
-        ];
-
-        // 24 rating (5-4-3-2-1)
-        $ratings = [5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1];
-
-        // 24 thời gian khác nhau (trong 3 tháng gần đây)
-        $times = [
-            '2025-06-13 08:30:00', '2025-06-12 14:45:00', '2025-06-11 10:20:00', '2025-06-10 16:15:00',
-            '2025-06-09 09:40:00', '2025-06-08 13:25:00', '2025-06-07 11:10:00', '2025-06-06 15:35:00',
-            '2025-06-05 07:50:00', '2025-06-04 12:05:00', '2025-06-03 17:20:00', '2025-06-02 09:15:00',
-            '2025-06-01 14:30:00', '2025-05-31 10:45:00', '2025-05-30 16:00:00', '2025-05-29 08:25:00',
-            '2025-05-28 13:40:00', '2025-05-27 11:55:00', '2025-05-26 15:10:00', '2025-05-25 07:35:00',
-            '2025-05-24 12:50:00', '2025-05-23 17:05:00', '2025-05-22 09:20:00', '2025-05-21 14:15:00'
-        ];
-
-        // 24 comment khác nhau
+        // Danh sách comment mẫu
         $comments = [
             'Sản phẩm tuyệt vời! Chất lượng vượt trội, thiết kế đẹp mắt. Rất đáng đồng tiền!',
             'Rất hài lòng với sản phẩm này. Giao hàng nhanh, đóng gói cẩn thận.',
@@ -74,19 +56,24 @@ class ReviewSeeder extends Seeder
             'Không hài lòng với sản phẩm. Cần cải thiện nhiều hơn.'
         ];
 
+        $total = 0;
         foreach ($products as $product) {
-        for ($i = 0; $i < rand(10, 15); $i++) {
-            Review::create([
-                'product_id' => $product->id,
-                'user_id' => null,
-                'rating' => rand(3, 5),
-                'comment' => $comments[array_rand($comments)],
-                'user_name' => $userNames[array_rand($userNames)],
-                'created_at' => now()->subDays(rand(1, 30)),
-            ]);
+            // Mỗi sản phẩm sẽ có từ 8-15 review, mỗi review là của một user khác nhau (nếu đủ user)
+            $reviewCount = rand(8, min(15, $users->count()));
+            $userIds = $users->pluck('id')->shuffle()->take($reviewCount);
+            foreach ($userIds as $userId) {
+                $user = $users->find($userId);
+                Review::create([
+                    'product_id' => $product->id,
+                    'user_id' => $user->id,
+                    'rating' => rand(3, 5),
+                    'comment' => $comments[array_rand($comments)],
+                    'user_name' => $user->name,
+                    'created_at' => now()->subDays(rand(1, 90)),
+                ]);
+                $total++;
+            }
         }
-    }
-
-        $this->command->info('Đã tạo 24 review mẫu thành công!');
+        $this->command->info("Đã tạo $total review cho các sản phẩm!");
     }
 }
