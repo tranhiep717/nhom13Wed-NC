@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Quản lý Sản Phẩm</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/public/eProject_Sem2_Template_Admin/main.css">
-  <link rel="stylesheet" href="/public/eProject_Sem2_Template_Admin/my_style.css">
-  <link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="/public/adminlte/dist/css/adminlte.min.css">
-</head>
-<body>
+
 @extends('admin.layout')
 
 @section('title', 'Quản lý Sản phẩm')

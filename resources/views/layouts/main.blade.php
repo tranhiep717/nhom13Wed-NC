@@ -40,6 +40,7 @@
     <script src="{{ asset('js/checkout.js') }}"></script>
     <script src="{{ asset('js/wishlist.js') }}"></script>
     <script src="{{ asset('js/wishlist-badge.js') }}"></script>
+    @yield('scripts')
 </body>
 
 </html>

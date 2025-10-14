@@ -52,10 +52,28 @@ class WishlistController extends Controller
         }
         return redirect()->route('wishlist.index')->with('success', 'Đã xoá các sản phẩm đã chọn khỏi danh sách yêu thích!');
     }
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $products = $user->wishlist()->with('category')->get();
+        $sort = $request->input('sort', 'price_asc');
+        $perPage = (int) $request->input('perPage', 9);
+        $query = $user->wishlist()->with('category');
+        switch ($sort) {
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'price_asc':
+            default:
+                $query->orderBy('price', 'asc');
+                break;
+        }
+        $products = $query->paginate($perPage)->appends($request->all());
         return view('clients.wishlist', compact('products'));
     }
 }

@@ -86,7 +86,8 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                 </a>
             </div>
             <div>
-                <h3 class="product-price">{{ number_format($product->price) }} VNĐ <del class="product-old-price">{{ number_format($product->old_price) }} VNĐ</del></h3>
+                <h3 class="product-price">{{ number_format($product->price) }} VNĐ <del
+                        class="product-old-price">{{ number_format($product->old_price) }} VNĐ</del></h3>
                 <span class="product-available">{{ $product->stock > 0 ? 'Còn hàng' : 'Hết hàng' }}</span>
             </div>
             <p>{{ $product->description }}</p>
@@ -142,8 +143,11 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
 
             <ul class="product-links">
                 <li>Danh mục:</li>
-                <li><a href="{{ route('store.index', ['category' => $product->category->slug ?? '']) }}">{{ $product->category->name ?? 'Không có danh mục' }}</a></li>
-                <li>{{ $product->category->name ?? 'Không có danh mục' }}</li> {{-- Loại bỏ dòng này nếu nó là trùng lặp --}}
+                <li><a
+                        href="{{ route('store.index', ['category' => $product->category->slug ?? '']) }}">{{ $product->category->name ?? 'Không có danh mục' }}</a>
+                </li>
+                <li>{{ $product->category->name ?? 'Không có danh mục' }}</li>
+                {{-- Loại bỏ dòng này nếu nó là trùng lặp --}}
             </ul>
 
             <ul class="product-share">
@@ -187,8 +191,8 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                         @php
                                         $avgRating = $product->averageRating(); // Dùng method thống nhất
                                         @endphp
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
+                                        @for($i = 1; $i <= 5; $i++) <i
+                                            class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}"></i>
                                             @endfor
                                     </div>
                                 </div>
@@ -196,8 +200,8 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                     @for($i = 5; $i >= 1; $i--)
                                     <li>
                                         <div class="rating-stars">
-                                            @for($j = 1; $j <= 5; $j++)
-                                                <i class="fa fa-star{{ $j <= $i ? '' : '-o' }}"></i>
+                                            @for($j = 1; $j <= 5; $j++) <i class="fa fa-star{{ $j <= $i ? '' : '-o' }}">
+                                                </i>
                                                 @endfor
                                         </div>
                                         <div class="rating-progress">
@@ -267,7 +271,8 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                         <div class="col-md-3">
                             <div id="review-form">
                                 @auth
-                                <form action="{{ route('products.rating', $product->id) }}" method="POST" class="review-form">
+                                <form action="{{ route('products.rating', $product->id) }}" method="POST"
+                                    class="review-form">
                                     @csrf
                                     @if(session('success'))
                                     <div class="alert alert-success">
@@ -278,11 +283,16 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                     <div class="input-rating">
                                         <span>Xếp hạng của bạn: </span>
                                         <div class="stars">
-                                            <input id="star5" name="rating" value="5" type="radio" required><label for="star5"></label>
-                                            <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-                                            <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-                                            <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-                                            <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+                                            <input id="star5" name="rating" value="5" type="radio" required><label
+                                                for="star5"></label>
+                                            <input id="star4" name="rating" value="4" type="radio"><label
+                                                for="star4"></label>
+                                            <input id="star3" name="rating" value="3" type="radio"><label
+                                                for="star3"></label>
+                                            <input id="star2" name="rating" value="2" type="radio"><label
+                                                for="star2"></label>
+                                            <input id="star1" name="rating" value="1" type="radio"><label
+                                                for="star1"></label>
                                         </div>
                                     </div>
 
@@ -439,47 +449,47 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
 </div>
 
 <script>
-    function closeModal() {
-        document.getElementById('success-modal').style.display = 'none';
-    }
+function closeModal() {
+    document.getElementById('success-modal').style.display = 'none';
+}
 
-    setTimeout(function() {
-        document.getElementById('success-modal').style.display = 'none';
-    }, 2000);
+setTimeout(function() {
+    document.getElementById('success-modal').style.display = 'none';
+}, 2000);
 </script>
 @endif
 @endsection
 
 @push('scripts')
 <script>
-    $(document).ready(function() {
-        $('.add-to-cart-form').on('submit', function(e) {
-            e.preventDefault();
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: form.serialize(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(res) {
-                    showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 401) {
-                        window.location.href = '/login';
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
+$(document).ready(function() {
+    $('.add-to-cart-form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(res) {
+                showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    window.location.href = '/login';
+                } else {
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
                 }
-            });
+            }
         });
     });
+});
 
-    function showCartSuccessModal(msg) {
-        if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
-        var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+function showCartSuccessModal(msg) {
+    if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
+    var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
         <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
             <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
                 <i class='fa fa-shopping-cart'></i> <i class='fa fa-check' style='color:#4caf50;'></i>

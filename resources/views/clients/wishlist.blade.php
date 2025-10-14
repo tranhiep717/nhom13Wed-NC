@@ -63,7 +63,7 @@
 @endsection
 @section('scripts')
 <script>
-    $(document).ready(function() {
+    $(function() {
         // Click vào vùng sản phẩm (trừ checkbox) sẽ chuyển trang chi tiết
         $('.wishlist-product-link-area').on('click', function(e) {
             if ($(e.target).is('input[type="checkbox"]')) return;
@@ -75,8 +75,25 @@
         // Ngăn submit nếu không chọn sản phẩm nào
         $('#wishlist-form').on('submit', function(e) {
             if ($('input.wishlist-checkbox:checked').length === 0) {
-                alert('Vui lòng chọn ít nhất một sản phẩm để xoá!');
+                if (typeof window.showToast === 'function') {
+                    showToast('Vui lòng chọn ít nhất một sản phẩm để xoá!');
+                } else {
+                    alert('Vui lòng chọn ít nhất một sản phẩm để xoá!');
+                }
                 e.preventDefault();
+                return false;
+            }
+        });
+        // Ngăn click nút xoá nếu không chọn sản phẩm nào
+        $('#remove-selected-btn').on('click', function(e) {
+            if ($('input.wishlist-checkbox:checked').length === 0) {
+                if (typeof window.showToast === 'function') {
+                    showToast('Vui lòng chọn ít nhất một sản phẩm để xoá!');
+                } else {
+                    alert('Vui lòng chọn ít nhất một sản phẩm để xoá!');
+                }
+                e.preventDefault();
+                return false;
             }
         });
     });

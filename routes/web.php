@@ -154,6 +154,10 @@ Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
 
         // Orders (bạn có thể bổ sung CRUD tương tự nếu cần)
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::post('/orders/{id}/confirm', [AdminOrderController::class, 'confirm'])->name('orders.confirm');
+
+        Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
+
     });
 }); // <-- Kết thúc group route prefix('admin')
 

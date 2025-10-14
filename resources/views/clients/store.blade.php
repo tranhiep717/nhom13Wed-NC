@@ -36,13 +36,15 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                         <div class="price-filter">
                             <div id="price-slider"></div>
                             <div class="input-number price-min">
-                                <input id="price-min" type="number" value="{{ request('price_min', 1) }}" onchange="applyPriceFilter()">
+                                <input id="price-min" type="number" value="{{ request('price_min', 1) }}"
+                                    onchange="applyPriceFilter()">
                                 <span class="qty-up">+</span>
                                 <span class="qty-down">-</span>
                             </div>
                             <span>-</span>
                             <div class="input-number price-max">
-                                <input id="price-max" type="number" value="{{ request('price_max', 99999999) }}" onchange="applyPriceFilter()">
+                                <input id="price-max" type="number" value="{{ request('price_max', 99999999) }}"
+                                    onchange="applyPriceFilter()">
                                 <span class="qty-up">+</span>
                                 <span class="qty-down">-</span>
                             </div>
@@ -72,13 +74,19 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                         @foreach ($bestSellingProducts as $bestSellingProduct)
                         <div class="product-widget">
                             <div class="product-img">
-                                <img src="{{ asset('storage/' . $bestSellingProduct->image_path) }}" alt="{{ $bestSellingProduct->name }}">
+                                <img src="{{ asset('storage/' . $bestSellingProduct->image_path) }}"
+                                    alt="{{ $bestSellingProduct->name }}">
                             </div>
                             <div class="product-body">
-                                <p class="product-category">{{ $bestSellingProduct->category->name ?? 'Không có danh mục' }}</p>
+                                <p class="product-category">
+                                    {{ $bestSellingProduct->category->name ?? 'Không có danh mục' }}</p>
                                 {{-- Sửa: Sử dụng route 'products.show' --}}
-                                <h3 class="product-name"><a href="{{ route('products.show', $bestSellingProduct->slug) }}">{{ $bestSellingProduct->name }}</a></h3>
-                                <h4 class="product-price">{{ number_format($bestSellingProduct->price) }} VNĐ <del class="product-old-price">{{ number_format($bestSellingProduct->old_price) }} VNĐ</del></h4>
+                                <h3 class="product-name"><a
+                                        href="{{ route('products.show', $bestSellingProduct->slug) }}">{{ $bestSellingProduct->name }}</a>
+                                </h3>
+                                <h4 class="product-price">{{ number_format($bestSellingProduct->price) }} VNĐ <del
+                                        class="product-old-price">{{ number_format($bestSellingProduct->old_price) }}
+                                        VNĐ</del></h4>
                             </div>
                         </div>
                         @endforeach
@@ -90,12 +98,18 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                             <label>
                                 Sắp xếp theo:
                                 <select class="input-select" id="sort-select">
-                                    <option value="new" {{ request('sort') == 'new' ? 'selected' : '' }}>Mới nhất</option>
-                                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Phổ biến</option>
-                                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá tăng dần</option>
-                                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá giảm dần</option>
-                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Tên (A-Z)</option>
-                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Tên (Z-A)</option>
+                                    <option value="new" {{ request('sort') == 'new' ? 'selected' : '' }}>Mới nhất
+                                    </option>
+                                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>
+                                        Phổ biến</option>
+                                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá
+                                        tăng dần</option>
+                                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
+                                        Giá giảm dần</option>
+                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Tên
+                                        (A-Z)</option>
+                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Tên
+                                        (Z-A)</option>
                                 </select>
                             </label>
 
@@ -117,36 +131,55 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                     <div class="row" id="ajax-products-list">
                         @forelse ($products as $product)
                         <div class="col-md-4 col-xs-6 mb-4">
-                            <a href="{{ route('products.show', $product->slug) }}" style="text-decoration:none;color:inherit">
-                                <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
+                            <a href="{{ route('products.show', $product->slug) }}"
+                                style="text-decoration:none;color:inherit">
+                                <div class="product"
+                                    style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                                     <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                                         @php
-                                        $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                                        $imagePath = $product->image_path && file_exists(public_path('storage/' .
+                                        $product->image_path))
                                         ? asset('storage/' . $product->image_path)
                                         : asset('img/default-product.png');
                                         @endphp
-                                        <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
+                                        <img src="{{ $imagePath }}" alt="{{ $product->name }}"
+                                            style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                                         @if($product->is_new)
-                                        <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
+                                        <div class="product-label"
+                                            style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">
+                                            MỚI</div>
                                         @endif
                                         @if($product->discount_percentage > 0)
-                                        <div class="product-label" style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">-{{ $product->discount_percentage }}%</div>
+                                        <div class="product-label"
+                                            style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">
+                                            -{{ $product->discount_percentage }}%</div>
                                         @endif
                                     </div>
                                     <div class="product-body" style="padding:18px 24px 0 24px;">
-                                        <p class="product-category" style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">{{ $product->category->name ?? 'N/A' }}</p>
-                                        <h3 class="product-name" style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;"><a href="{{ route('products.show', $product->slug) }}" style="color:#222;text-decoration:none;">{{ $product->name }}</a></h3>
-                                        <h4 class="product-price" style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">{{ number_format($product->price) }} VNĐ @if($product->old_price) <del class="product-old-price" style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($product->old_price) }} VNĐ</del>@endif</h4>
+                                        <p class="product-category"
+                                            style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">
+                                            {{ $product->category->name ?? 'N/A' }}</p>
+                                        <h3 class="product-name"
+                                            style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;">
+                                            <a href="{{ route('products.show', $product->slug) }}"
+                                                style="color:#222;text-decoration:none;">{{ $product->name }}</a></h3>
+                                        <h4 class="product-price"
+                                            style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">
+                                            {{ number_format($product->price) }} VNĐ @if($product->old_price) <del
+                                                class="product-old-price"
+                                                style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($product->old_price) }}
+                                                VNĐ</del>@endif</h4>
                                         <div class="product-rating" style="margin-bottom:8px;">
                                             @for ($i = 0; $i < $product->rating; $i++)
                                                 <i class="fa fa-star" style="color:#ffc107;"></i>
                                                 @endfor
-                                                @for ($i = $product->rating; $i < 5; $i++)
-                                                    <i class="fa fa-star-o" style="color:#ffc107;"></i>
+                                                @for ($i = $product->rating; $i < 5; $i++) <i class="fa fa-star-o"
+                                                    style="color:#ffc107;"></i>
                                                     @endfor
                                         </div>
                                         <div class="product-btns mb-2" style="display:flex;gap:8px;">
-                                            <button class="add-to-wishlist wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
+                                            <button
+                                                class="add-to-wishlist wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
                                                 data-product-id="{{ $product->id }}"
                                                 style="background:transparent;border:none;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;"
                                                 tabindex="0">
@@ -156,11 +189,13 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                         </div>
                                     </div>
                                     <div class="add-to-cart" style="padding:0 24px 18px 24px;">
-                                        <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" style="display:flex;align-items:center;gap:10px;">
+                                        <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST"
+                                            style="display:flex;align-items:center;gap:10px;">
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                             <input type="hidden" name="quantity" value="1">
-                                            <button type="submit" class="add-to-cart-btn" style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
+                                            <button type="submit" class="add-to-cart-btn"
+                                                style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
                                                 <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                                             </button>
                                         </form>
@@ -176,8 +211,11 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                     </div>
 
                     <div class="store-filter clearfix">
-                        <span class="store-qty">Hiển thị {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} / {{ $products->total() }} sản phẩm</span>
-                        {{ $products->links('vendor.pagination.default') }} {{-- Sử dụng phân trang mặc định của Laravel hoặc custom --}}
+                        <span class="store-qty">Hiển thị
+                            {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} /
+                            {{ $products->total() }} sản phẩm</span>
+                        {{ $products->links('vendor.pagination.default') }}
+                        {{-- Sử dụng phân trang mặc định của Laravel hoặc custom --}}
                     </div>
                 </div>
             </div>
@@ -208,131 +246,135 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
 </div>
 
 @if(session('success'))
-<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
-    <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
+<div id="cart-success-modal"
+    style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+    <div
+        style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
         <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
             <i class="fa fa-shopping-cart"></i> <i class="fa fa-check" style="color:#4caf50;"></i>
         </div>
         <div style="font-size:20px;font-weight:500;margin-bottom:16px;">{{ session('success') }}</div>
-        <a href="{{ route('cart.index') }}" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
+        <a href="{{ route('cart.index') }}"
+            style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem
+            giỏ hàng</a>
     </div>
 </div>
 <script>
-    setTimeout(function() {
-        document.getElementById('cart-success-modal').style.display = 'none';
-    }, 2000);
+setTimeout(function() {
+    document.getElementById('cart-success-modal').style.display = 'none';
+}, 2000);
 </script>
 @endif
 @endsection
 
 @push('scripts')
 <script>
-    function applyBrandFilter(brandSlug) {
-        let currentUrl = new URL(window.location.href);
-        if (currentUrl.searchParams.get('brand') === brandSlug) {
-            currentUrl.searchParams.delete('brand');
-        } else {
-            currentUrl.searchParams.set('brand', brandSlug);
-        }
-        window.location.href = currentUrl.toString();
+function applyBrandFilter(brandSlug) {
+    let currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.get('brand') === brandSlug) {
+        currentUrl.searchParams.delete('brand');
+    } else {
+        currentUrl.searchParams.set('brand', brandSlug);
     }
+    window.location.href = currentUrl.toString();
+}
 
-    // Hàm áp dụng bộ lọc giá
-    function applyPriceFilter() {
-        let minPrice = document.getElementById('price-min').value;
-        let maxPrice = document.getElementById('price-max').value;
-        let currentUrl = new URL(window.location.href);
+// Hàm áp dụng bộ lọc giá
+function applyPriceFilter() {
+    let minPrice = document.getElementById('price-min').value;
+    let maxPrice = document.getElementById('price-max').value;
+    let currentUrl = new URL(window.location.href);
 
-        if (minPrice) {
-            currentUrl.searchParams.set('price_min', minPrice);
-        } else {
-            currentUrl.searchParams.delete('price_min');
-        }
-        if (maxPrice) {
-            currentUrl.searchParams.set('price_max', maxPrice);
-        } else {
-            currentUrl.searchParams.delete('price_max');
-        }
-        window.location.href = currentUrl.toString();
+    if (minPrice) {
+        currentUrl.searchParams.set('price_min', minPrice);
+    } else {
+        currentUrl.searchParams.delete('price_min');
     }
-
-    // Khởi tạo slider giá (chắc chắn bạn đã có JS cho nouislider)
-    var priceSlider = document.getElementById('price-slider');
-    var priceMin = {
-        {
-            json_encode(request('price_min', 1))
-        }
-    };
-    var priceMax = {
-        {
-            json_encode(request('price_max', 99999999))
-        }
-    };
-    if (priceSlider) {
-        noUiSlider.create(priceSlider, {
-            start: [priceMin, priceMax],
-            connect: true,
-            step: 1,
-            range: {
-                'min': 1,
-                'max': 99999999
-            }
-        });
-        priceSlider.noUiSlider.on('update', function(values, handle) {
-            var value = values[handle];
-            if (handle) {
-                document.getElementById('price-max').value = Math.round(value);
-            } else {
-                document.getElementById('price-min').value = Math.round(value);
-            }
-        });
+    if (maxPrice) {
+        currentUrl.searchParams.set('price_max', maxPrice);
+    } else {
+        currentUrl.searchParams.delete('price_max');
     }
+    window.location.href = currentUrl.toString();
+}
 
-    $(document).ready(function() {
-        $('.add-to-cart-form').on('submit', function(e) {
-            e.preventDefault();
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: form.serialize(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(res) {
-                    showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 401) {
-                        window.location.href = '/login';
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
+// Khởi tạo slider giá (chắc chắn bạn đã có JS cho nouislider)
+var priceSlider = document.getElementById('price-slider');
+var priceMin = {
+    {
+        json_encode(request('price_min', 1))
+    }
+};
+var priceMax = {
+    {
+        json_encode(request('price_max', 99999999))
+    }
+};
+if (priceSlider) {
+    noUiSlider.create(priceSlider, {
+        start: [priceMin, priceMax],
+        connect: true,
+        step: 1,
+        range: {
+            'min': 1,
+            'max': 99999999
+        }
+    });
+    priceSlider.noUiSlider.on('update', function(values, handle) {
+        var value = values[handle];
+        if (handle) {
+            document.getElementById('price-max').value = Math.round(value);
+        } else {
+            document.getElementById('price-min').value = Math.round(value);
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('.add-to-cart-form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(res) {
+                showCartSuccessModal('Sản phẩm đã được thêm vào giỏ hàng');
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    window.location.href = '/login';
+                } else {
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
                 }
-            });
-        });
-
-        // AJAX filter for sort and per page
-        $('#sort-select, #perpage-select').on('change', function() {
-            let sort = $('#sort-select').val();
-            let perPage = $('#perpage-select').val();
-            let url = new URL(window.location.href);
-            url.searchParams.set('sort', sort);
-            url.searchParams.set('per_page', perPage);
-            $.get(url.toString(), {
-                ajax: 1
-            }, function(html) {
-                $('#ajax-products-list').html($(html).find('#ajax-products-list').html());
-                $('html,body').animate({
-                    scrollTop: $('#ajax-products-list').offset().top - 80
-                }, 300);
-            });
+            }
         });
     });
 
-    function showCartSuccessModal(msg) {
-        if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
-        var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+    // AJAX filter for sort and per page
+    $('#sort-select, #perpage-select').on('change', function() {
+        let sort = $('#sort-select').val();
+        let perPage = $('#perpage-select').val();
+        let url = new URL(window.location.href);
+        url.searchParams.set('sort', sort);
+        url.searchParams.set('per_page', perPage);
+        $.get(url.toString(), {
+            ajax: 1
+        }, function(html) {
+            $('#ajax-products-list').html($(html).find('#ajax-products-list').html());
+            $('html,body').animate({
+                scrollTop: $('#ajax-products-list').offset().top - 80
+            }, 300);
+        });
+    });
+});
+
+function showCartSuccessModal(msg) {
+    if ($('#cart-success-modal').length) $('#cart-success-modal').remove();
+    var html = `<div id="cart-success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
             <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
                 <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
                     <i class='fa fa-shopping-cart'></i> <i class='fa fa-check' style='color:#4caf50;'></i>
@@ -341,13 +383,13 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                 <a href="/cart" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
             </div>
         </div>`;
-        $('body').append(html);
-        setTimeout(function() {
-            $('#cart-success-modal').fadeOut(300, function() {
-                $(this).remove();
-            });
-        }, 2000);
-    }
+    $('body').append(html);
+    setTimeout(function() {
+        $('#cart-success-modal').fadeOut(300, function() {
+            $(this).remove();
+        });
+    }, 2000);
+}
 </script>
 @endpush
 
@@ -357,35 +399,49 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
     @forelse ($products as $product)
     <div class="col-md-4 col-xs-6 mb-4">
         <a href="{{ route('products.show', $product->slug) }}" style="text-decoration:none;color:inherit">
-            <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div class="product"
+                style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                 <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                     @php
                     $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
                     ? asset('storage/' . $product->image_path)
                     : asset('img/default-product.png');
                     @endphp
-                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
+                    <img src="{{ $imagePath }}" alt="{{ $product->name }}"
+                        style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                     @if($product->is_new)
-                    <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
+                    <div class="product-label"
+                        style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">
+                        MỚI</div>
                     @endif
                     @if($product->discount_percentage > 0)
-                    <div class="product-label" style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">-{{ $product->discount_percentage }}%</div>
+                    <div class="product-label"
+                        style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">
+                        -{{ $product->discount_percentage }}%</div>
                     @endif
                 </div>
                 <div class="product-body" style="padding:18px 24px 0 24px;">
-                    <p class="product-category" style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">{{ $product->category->name ?? 'N/A' }}</p>
-                    <h3 class="product-name" style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;"><a href="{{ route('products.show', $product->slug) }}" style="color:#222;text-decoration:none;">{{ $product->name }}</a></h3>
-                    <h4 class="product-price" style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">{{ number_format($product->price) }} VNĐ @if($product->old_price) <del class="product-old-price" style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($product->old_price) }} VNĐ</del>@endif</h4>
+                    <p class="product-category" style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">
+                        {{ $product->category->name ?? 'N/A' }}</p>
+                    <h3 class="product-name"
+                        style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;"><a
+                            href="{{ route('products.show', $product->slug) }}"
+                            style="color:#222;text-decoration:none;">{{ $product->name }}</a></h3>
+                    <h4 class="product-price" style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">
+                        {{ number_format($product->price) }} VNĐ @if($product->old_price) <del class="product-old-price"
+                            style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($product->old_price) }}
+                            VNĐ</del>@endif</h4>
                     <div class="product-rating" style="margin-bottom:8px;">
                         @for ($i = 0; $i < $product->rating; $i++)
                             <i class="fa fa-star" style="color:#ffc107;"></i>
                             @endfor
-                            @for ($i = $product->rating; $i < 5; $i++)
-                                <i class="fa fa-star-o" style="color:#ffc107;"></i>
+                            @for ($i = $product->rating; $i < 5; $i++) <i class="fa fa-star-o" style="color:#ffc107;">
+                                </i>
                                 @endfor
                     </div>
                     <div class="product-btns mb-2" style="display:flex;gap:8px;">
-                        <button class="add-to-wishlist wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
+                        <button
+                            class="add-to-wishlist wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
                             data-product-id="{{ $product->id }}"
                             style="background:transparent;border:none;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;"
                             tabindex="0">
@@ -395,11 +451,13 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                     </div>
                 </div>
                 <div class="add-to-cart" style="padding:0 24px 18px 24px;">
-                    <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" style="display:flex;align-items:center;gap:10px;">
+                    <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST"
+                        style="display:flex;align-items:center;gap:10px;">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="add-to-cart-btn" style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
+                        <button type="submit" class="add-to-cart-btn"
+                            style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
                             <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                         </button>
                     </form>
@@ -416,17 +474,32 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
 @endsection
 @endif
 <style>
-    .wishlist-btn:hover {
-        background: #ffe4ec !important;
-        box-shadow: 0 4px 16px #f8bbd0;
-    }
+.wishlist-btn:hover {
+    background: #ffe4ec !important;
+    box-shadow: 0 4px 16px #f8bbd0;
+}
 
-    .wishlist-btn:active {
-        background: #ffd6e3 !important;
-    }
+.wishlist-btn:active {
+    background: #ffd6e3 !important;
+}
 
-    .wishlist-icon:hover {
-        color: #ff4081 !important;
-        transform: scale(1.2);
-    }
+.wishlist-icon:hover {
+    color: #ff4081 !important;
+    transform: scale(1.2);
+}
 </style>
+
+@section('scripts')
+<script>
+$(function() {
+    // Tự động submit khi thay đổi dropdown sắp xếp hoặc hiển thị
+    $('#sort-select, #perpage-select').on('change', function() {
+        let url = new URL(window.location.href);
+        url.searchParams.set('sort', $('#sort-select').val());
+        url.searchParams.set('per_page', $('#perpage-select').val());
+        // Giữ lại các filter khác (category, price, brand...)
+        window.location.href = url.toString();
+    });
+});
+</script>
+@endsection

@@ -94,11 +94,11 @@
 	<div class="container">
 		<div id="responsive-nav">
 			<ul class="main-nav nav navbar-nav">
-				<li><a href="{{route('home')}}">Trang chủ</a></li>
-				<li><a href="{{route('laptop')}}">Máy tính xách tay</a></li>
-				<li><a href="{{route('telephone')}}">Điện thoại thông minh</a></li>
-				<li><a href="{{route('camera')}}">Máy ảnh</a></li>
-				<li><a href="{{ route('accessories') }}">Phụ kiện</a></li>
+				<li class="{{ request()->routeIs('home') ? 'active' : '' }}"><a href="{{route('home')}}">Trang chủ</a></li>
+				<li class="{{ (request()->routeIs('store.index') && request('category') == 'laptop') ? 'active' : '' }}"><a href="{{route('laptop')}}">Máy tính xách tay</a></li>
+				<li class="{{ (request()->routeIs('store.index') && request('category') == 'dien-thoai') ? 'active' : '' }}"><a href="{{route('telephone')}}">Điện thoại thông minh</a></li>
+				<li class="{{ (request()->routeIs('store.index') && request('category') == 'may-anh') ? 'active' : '' }}"><a href="{{route('camera')}}">Máy ảnh</a></li>
+				<li class="{{ (request()->routeIs('store.index') && request('category') == 'phu-kien') ? 'active' : '' }}"><a href="{{ route('accessories') }}">Phụ kiện</a></li>
 			</ul>
 		</div>
 	</div>
