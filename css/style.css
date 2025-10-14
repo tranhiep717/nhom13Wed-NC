@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /*
 Template Name: Electro - HTML Ecommerce Template
 Author: yaminncco
@@ -2189,7 +2189,187 @@ textarea.input {
     margin-top: 10px;
   }
 }
-=======
+
+/* Nút yêu thích SVG mới */
+.add-to-wishlist {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0;
+    transition: transform 0.2s;
+}
+.add-to-wishlist svg {
+    display: block;
+    width: 28px;
+    height: 28px;
+    stroke: #e53935;
+    fill: none;
+    transition: fill 0.2s, stroke 0.2s;
+}
+.add-to-wishlist:hover svg {
+    fill: #e53935;
+    stroke: #fff;
+    filter: drop-shadow(0 0 4px #e53935aa);
+}
+
+/* Wishlist Modern Redesign */
+.wishlist-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  background: linear-gradient(135deg, #f8fafc 60%, #ffe3e3 100%);
+  min-height: 80vh;
+}
+
+.wishlist-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #2B2D42;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.wishlist-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  width: 100%;
+}
+
+.wishlist-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(209,0,36,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
+  width: 300px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wishlist-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 16px 40px 0 rgba(209,0,36,0.18), 0 2px 8px 0 rgba(0,0,0,0.06);
+}
+
+.wishlist-card .wishlist-fav {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(209,0,36,0.10);
+  padding: 8px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.wishlist-card .wishlist-fav svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
+  stroke: #D10024;
+  transition: fill 0.2s, stroke 0.2s;
+}
+.wishlist-card .wishlist-fav.active svg,
+.wishlist-card .wishlist-fav:hover svg {
+  fill: #D10024;
+  stroke: #fff;
+}
+
+.wishlist-card img {
+  width: 120px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px 0 rgba(209,0,36,0.08);
+}
+
+.wishlist-card .wishlist-product-type {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #8D99AE;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.wishlist-card .wishlist-product-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2B2D42;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.wishlist-card .wishlist-product-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #D10024;
+  margin-bottom: 0;
+}
+
+.wishlist-btn-group {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.wishlist-btn {
+  padding: 14px 36px;
+  border-radius: 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  background: linear-gradient(90deg, #D10024 60%, #ff416c 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px 0 rgba(209,0,36,0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  outline: none;
+}
+.wishlist-btn:hover {
+  background: linear-gradient(90deg, #ff416c 0%, #D10024 100%);
+  box-shadow: 0 8px 32px 0 rgba(209,0,36,0.18);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.wishlist-btn-outline {
+  background: #fff;
+  color: #D10024;
+  border: 2px solid #D10024;
+  transition: background 0.2s, color 0.2s;
+}
+.wishlist-btn-outline:hover {
+  background: #D10024;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .wishlist-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .wishlist-card {
+    width: 90vw;
+    min-width: 0;
+  }
+  .wishlist-btn-group {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
 /*
 Template Name: Electro - HTML Ecommerce Template
 Author: yaminncco
@@ -4380,4 +4560,3 @@ textarea.input {
     margin-top: 10px;
   }
 }
->>>>>>> 3f0c0263bbe65bf7560769edd502045988e2964c

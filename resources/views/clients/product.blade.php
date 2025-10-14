@@ -3,6 +3,12 @@
 @section('title', $product->name ?? 'Chi tiết sản phẩm') {{-- Cập nhật tiêu đề trang --}}
 
 @section('content')
+@php
+$wishlistIds = [];
+if(auth()->check()) {
+$wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
+}
+@endphp
 <div id="breadcrumb" class="section">
     <div class="container">
         <div class="row">
@@ -11,9 +17,12 @@
                     <li><a href="{{ route('home') }}">Trang chủ</a></li>
                     {{-- Breadcrumb danh mục sản phẩm --}}
                     @if($product->category)
-                    <li><a href="{{ route('store.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a></li>
+                    <li><a
+                            href="{{ route('store.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
+                    </li>
                     @else
-                    <li><a href="{{ route('store.index') }}">Tất cả sản phẩm</a></li> {{-- Hoặc link đến trang danh mục chung nếu không có danh mục --}}
+                    <li><a href="{{ route('store.index') }}">Tất cả sản phẩm</a></li>
+                    {{-- Hoặc link đến trang danh mục chung nếu không có danh mục --}}
                     @endif
                     <li class="active">{{ $product->name ?? 'Tên sản phẩm' }}</li>
                 </ul>
@@ -29,11 +38,12 @@
                 <div id="product-main-img">
                     <div class="product-preview">
                         @php
-                            $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
-                                ? asset('storage/' . $product->image_path)
-                                : asset('img/default-product.png');
+                        $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
+                        ? asset('storage/' . $product->image_path)
+                        : asset('img/default-product.png');
                         @endphp
-                        <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width:100%;max-height:260px;border-radius:1.5rem;box-shadow:0 4px 24px #e3e3e3;object-fit:contain;background:#f8fafc;">
+                        <img src="{{ $imagePath }}" alt="{{ $product->name }}"
+                            style="max-width:100%;max-height:260px;border-radius:1.5rem;box-shadow:0 4px 24px #e3e3e3;object-fit:contain;background:#f8fafc;">
                     </div>
                     {{-- Nếu bạn có nhiều hình ảnh cho sản phẩm (liên kết với Product::images) --}}
                     {{-- @foreach($product->images as $image)
@@ -104,19 +114,29 @@
                 @endif
             </div>
             <div class="add-to-cart" style="display:flex;align-items:center;gap:12px;">
-                <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" style="display:flex;align-items:center;gap:12px;">
+                <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST"
+                    style="display:flex;align-items:center;gap:12px;">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="number" name="quantity" value="1" min="1" style="width:60px;display:inline-block;border-radius:8px;border:1px solid #eee;padding:4px 8px;">
-                    <button type="submit" class="add-to-cart-btn" style="background:#d10024;color:#fff;border-radius:24px;padding:10px 28px;font-size:16px;font-weight:600;box-shadow:0 2px 8px rgba(209,0,36,0.08);transition:background 0.2s;">
+                    <input type="number" name="quantity" value="1" min="1"
+                        style="width:60px;display:inline-block;border-radius:8px;border:1px solid #eee;padding:4px 8px;">
+                    <button type="submit" class="add-to-cart-btn"
+                        style="background:#d10024;color:#fff;border-radius:24px;padding:10px 28px;font-size:16px;font-weight:600;box-shadow:0 2px 8px rgba(209,0,36,0.08);transition:background 0.2s;">
                         <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                     </button>
                 </form>
-                <a href="#" class="primary-btn" style="background:#222;color:#fff;border-radius:24px;padding:10px 28px;font-size:16px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:background 0.2s;">Mua ngay</a>
+                <a href="#" class="primary-btn"
+                    style="background:#222;color:#fff;border-radius:24px;padding:10px 28px;font-size:16px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:background 0.2s;">Mua
+                    ngay</a>
             </div>
 
             <ul class="product-btns">
-                <li><a href="#"><i class="fa fa-heart-o"></i> thêm vào danh sách yêu thích</a></li>
+                <li><a href="#" class="wishlist-btn{{ in_array($product->id, $wishlistIds) ? ' added' : '' }}"
+                        data-product-id="{{ $product->id }}"
+                        style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;">
+                        <i class="fa {{ in_array($product->id, $wishlistIds) ? 'fa-heart' : 'fa-heart-o' }} wishlist-icon"
+                            style="color:#d10024;font-size:1.5rem;transition:color 0.2s;"></i>
+                    </a> thêm vào danh sách yêu thích</li>
                 <li><a href="#"><i class="fa fa-exchange"></i> thêm vào so sánh</a></li>
             </ul>
 
@@ -295,47 +315,76 @@
             @if(isset($relatedProducts) && $relatedProducts->count() > 0)
             @foreach ($relatedProducts as $relatedProduct)
             <div class="col-md-3 col-xs-6 mb-4">
-                <a href="{{ route('products.show', $relatedProduct->slug) }}" style="display:block;height:100%;text-decoration:none;color:inherit">
-                    <div class="product" style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+                <a href="{{ route('products.show', $relatedProduct->slug) }}"
+                    style="display:block;height:100%;text-decoration:none;color:inherit">
+                    <div class="product"
+                        style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;height:50%;">
                         <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                             @php
-                                $imagePath = $relatedProduct->image_path && file_exists(public_path('storage/' . $relatedProduct->image_path))
-                                    ? asset('storage/' . $relatedProduct->image_path)
-                                    : asset('img/default-product.png');
+                            $imagePath = $relatedProduct->image_path && file_exists(public_path('storage/' .
+                            $relatedProduct->image_path))
+                            ? asset('storage/' . $relatedProduct->image_path)
+                            : asset('img/default-product.png');
                             @endphp
-                            <img src="{{ $imagePath }}" alt="{{ $relatedProduct->name }}" style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
+                            <img src="{{ $imagePath }}" alt="{{ $relatedProduct->name }}"
+                                style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
                             @if($relatedProduct->is_new)
-                            <div class="product-label" style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">MỚI</div>
+                            <div class="product-label"
+                                style="position:absolute;top:18px;left:18px;background:#43a047;color:#fff;font-weight:700;border-radius:8px 0 8px 0;padding:3px 14px;font-size:13px;">
+                                MỚI</div>
                             @endif
                             @if($relatedProduct->discount_percentage > 0)
-                            <div class="product-label" style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">-{{ $relatedProduct->discount_percentage }}%</div>
+                            <div class="product-label"
+                                style="position:absolute;top:18px;right:18px;background:#d10024;color:#fff;font-weight:700;border-radius:0 8px 0 8px;padding:3px 14px;font-size:13px;">
+                                -{{ $relatedProduct->discount_percentage }}%</div>
                             @endif
                         </div>
                         <div class="product-body" style="padding:18px 24px 0 24px;">
-                            <p class="product-category" style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">{{ $relatedProduct->category->name ?? 'N/A' }}</p>
-                            <h3 class="product-name" style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;">{{ $relatedProduct->name }}</h3>
-                            <h4 class="product-price" style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">{{ number_format($relatedProduct->price) }} VNĐ @if($relatedProduct->old_price) <del class="product-old-price" style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($relatedProduct->old_price) }} VNĐ</del>@endif</h4>
+                            <p class="product-category"
+                                style="font-size:13px;color:#888;font-weight:500;margin-bottom:4px;">
+                                {{ $relatedProduct->category->name ?? 'N/A' }}</p>
+                            <h3 class="product-name"
+                                style="font-size:1.1rem;font-weight:700;line-height:1.3;margin-bottom:8px;">
+                                {{ $relatedProduct->name }}</h3>
+                            <h4 class="product-price"
+                                style="font-size:1.2rem;color:#d10024;font-weight:800;margin-bottom:6px;">
+                                {{ number_format($relatedProduct->price) }} VNĐ @if($relatedProduct->old_price) <del
+                                    class="product-old-price"
+                                    style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($relatedProduct->old_price) }}
+                                    VNĐ</del>@endif</h4>
                             <div class="product-rating" style="margin-bottom:8px;">
                                 @for ($i = 0; $i < $relatedProduct->rating; $i++)
                                     <i class="fa fa-star" style="color:#ffc107;"></i>
                                     @endfor
-                                    @for ($i = $relatedProduct->rating; $i < 5; $i++)
-                                        <i class="fa fa-star-o" style="color:#ffc107;"></i>
+                                    @for ($i = $relatedProduct->rating; $i < 5; $i++) <i class="fa fa-star-o"
+                                        style="color:#ffc107;"></i>
                                         @endfor
-                                        <span style="color:#888;font-size:13px;margin-left:4px;">({{ $relatedProduct->ratings_count ?? 0 }})</span>
+                                        <span
+                                            style="color:#888;font-size:13px;margin-left:4px;">({{ $relatedProduct->ratings_count ?? 0 }})</span>
                             </div>
                             <div class="product-btns mb-2" style="display:flex;gap:8px;">
-                                <button class="add-to-wishlist" style="background:transparent;border:none;"><i class="fa fa-heart-o" style="color:#d10024;"></i></button>
-                                <button class="add-to-compare" style="background:transparent;border:none;"><i class="fa fa-exchange" style="color:#1976d2;"></i></button>
-                                <button class="quick-view" style="background:transparent;border:none;"><i class="fa fa-eye" style="color:#222;"></i></button>
+                                <button
+                                    class="add-to-wishlist wishlist-btn{{ in_array($relatedProduct->id, $wishlistIds) ? ' added' : '' }}"
+                                    data-product-id="{{ $relatedProduct->id }}"
+                                    style="background:transparent;border:none;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 2px 8px #f8bbd0;"
+                                    tabindex="0">
+                                    <i class="fa {{ in_array($relatedProduct->id, $wishlistIds) ? 'fa-heart' : 'fa-heart-o' }} wishlist-icon"
+                                        style="color:#d10024;font-size:1.5rem;transition:color 0.2s;"></i>
+                                </button>
+                                <button class="add-to-compare" style="background:transparent;border:none;"><i
+                                        class="fa fa-exchange" style="color:#1976d2;"></i></button>
+                                <button class="quick-view" style="background:transparent;border:none;"><i
+                                        class="fa fa-eye" style="color:#222;"></i></button>
                             </div>
                         </div>
                         <div class="add-to-cart" style="padding:0 24px 18px 24px;">
-                            <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" style="display:flex;align-items:center;gap:10px;">
+                            <form class="add-to-cart-form" action="{{ route('cart.add') }}" method="POST"
+                                style="display:flex;align-items:center;gap:10px;">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
                                 <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="add-to-cart-btn" style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
+                                <button type="submit" class="add-to-cart-btn"
+                                    style="background:#d10024;color:#fff;border-radius:24px;padding:10px 24px;font-size:15px;font-weight:600;box-shadow:0 2px 8px #f8bbd0;transition:background 0.2s;">
                                     <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
                                 </button>
                             </form>
@@ -376,13 +425,16 @@
 </div>
 
 @if(session('success'))
-<div id="success-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
-    <div style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
+<div id="success-modal"
+    style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+    <div
+        style="background:#222;padding:32px 40px;border-radius:16px;text-align:center;color:#fff;min-width:320px;box-shadow:0 8px 32px #0008;">
         <div style="font-size:48px;color:#4caf50;margin-bottom:12px;">
             <i class="fa fa-check" style="color:#4caf50;"></i>
         </div>
         <div style="font-size:20px;font-weight:500;margin-bottom:16px;">{{ session('success') }}</div>
-        <button onclick="closeModal()" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;border:none;cursor:pointer;">Đóng</button>
+        <button onclick="closeModal()"
+            style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;border:none;cursor:pointer;">Đóng</button>
     </div>
 </div>
 
@@ -436,12 +488,28 @@
             <a href="/cart" style="background:#fff;color:#222;padding:8px 24px;border-radius:24px;font-weight:600;text-decoration:none;">Xem giỏ hàng</a>
         </div>
     </div>`;
-        $('body').append(html);
-        setTimeout(function() {
-            $('#cart-success-modal').fadeOut(300, function() {
-                $(this).remove();
-            });
-        }, 2000);
-    }
+    $('body').append(html);
+    setTimeout(function() {
+        $('#cart-success-modal').fadeOut(300, function() {
+            $(this).remove();
+        });
+    }, 2000);
+}
 </script>
 @endpush
+
+<style>
+.wishlist-btn:hover {
+    background: #ffe4ec !important;
+    box-shadow: 0 4px 16px #f8bbd0;
+}
+
+.wishlist-btn:active {
+    background: #ffd6e3 !important;
+}
+
+.wishlist-icon:hover {
+    color: #ff4081 !important;
+    transform: scale(1.2);
+}
+</style>
