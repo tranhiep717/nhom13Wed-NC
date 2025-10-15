@@ -12,7 +12,8 @@ class StoreController extends Controller
     public function index(Request $request)
     {
         $productsQuery = Product::query();
-        $currentCategory = null; // Khởi tạo biến $currentCategory
+        $currentCategory = null; // danh mục hiện tại
+        $currentBrand = null;    // thương hiệu hiện tại
 
         // Lấy category từ request nếu có
         if ($request->has('category') && $request->category != '') {
@@ -65,48 +66,44 @@ class StoreController extends Controller
                 $productsQuery->orderBy('created_at', 'desc');
         }
 
-        // Lấy các sản phẩm bán chạy nhất
-        $bestSellingProducts = Product::orderByDesc('sold_count')->take(3)->get();
-
-        // Lấy các sản phẩm chính để hiển thị trên trang (có phân trang)
-        $perPage = $request->get('per_page', 9);
-        $products = $productsQuery->paginate($perPage)->appends($request->except('page')); // Giữ lại các tham số lọc/sắp xếp khi phân trang
-
-        // Lấy danh mục để hiển thị sidebar
-        $categories = Category::withCount('products')->get();
-
-        // Lọc theo brand
+        // Lọc theo brand (đặt trước paginate để có hiệu lực)
         $brands = Brand::all();
-        if ($request->has('brand') && $request->brand != '') {
+        if ($request->filled('brand')) {
             $brandSlug = $request->input('brand');
-            $currentBrand = Brand::where('slug', $brandSlug)->first();
-            if ($currentBrand) {
+            $candidateBrand = Brand::where('slug', $brandSlug)->first();
+            if ($candidateBrand) {
+                $currentBrand = $candidateBrand;
                 $productsQuery->where('brand_id', $currentBrand->id);
             }
-        } else {
-            $currentBrand = null;
         }
+
+        // Lấy các sản phẩm bán chạy nhất dựa trên cùng bộ lọc hiện tại (clone tránh ảnh hưởng thứ tự chính)
+        $bestSellingProducts = (clone $productsQuery)
+            ->orderByDesc('sold_count')
+            ->take(3)
+            ->get();
+
+        // Lấy danh mục (kèm đếm theo trạng thái hiện tại của DB)
+        $categories = Category::withCount('products')->get();
+
+        // Phân trang cuối cùng sau khi áp dụng toàn bộ filter
+        $perPage = $request->get('per_page', 9);
+        $products = $productsQuery
+            ->paginate($perPage)
+            ->appends($request->except('page'));
 
         // Nếu là AJAX request, chỉ trả về partial HTML danh sách sản phẩm
-        if ($request->ajax()) {
-            return response()->view('clients.store', [
-                'products' => $products,
-                'bestSellingProducts' => $bestSellingProducts,
-                'categories' => $categories,
-                'brands' => $brands,
-                'currentCategory' => $currentCategory,
-                'currentBrand' => $currentBrand,
-            ]);
-        }
-
-        // Trả về view đầy đủ nếu không phải AJAX
-        return view('clients.store', [
+        $viewData = [
             'products' => $products,
             'bestSellingProducts' => $bestSellingProducts,
             'categories' => $categories,
             'brands' => $brands,
             'currentCategory' => $currentCategory,
             'currentBrand' => $currentBrand,
-        ]);
+        ];
+
+        return $request->ajax()
+            ? response()->view('clients.store', $viewData)
+            : view('clients.store', $viewData);
     }
 }

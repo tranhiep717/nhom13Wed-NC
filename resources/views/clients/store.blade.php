@@ -137,10 +137,15 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                     style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                                     <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                                         @php
-                                        $imagePath = $product->image_path && file_exists(public_path('storage/' .
-                                        $product->image_path))
-                                        ? asset('storage/' . $product->image_path)
-                                        : asset('img/default-product.png');
+                                            $imagePath = asset('img/default-product.png');
+                                            if($product->image_path){
+                                                if(str_starts_with($product->image_path,'img/')){
+                                                    $try = public_path($product->image_path);
+                                                    $imagePath = file_exists($try) ? asset($product->image_path) : $imagePath;
+                                                } elseif(file_exists(public_path('storage/'.$product->image_path))){
+                                                    $imagePath = asset('storage/'.$product->image_path);
+                                                }
+                                            }
                                         @endphp
                                         <img src="{{ $imagePath }}" alt="{{ $product->name }}"
                                             style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">
@@ -300,16 +305,9 @@ function applyPriceFilter() {
 
 // Khởi tạo slider giá (chắc chắn bạn đã có JS cho nouislider)
 var priceSlider = document.getElementById('price-slider');
-var priceMin = {
-    {
-        json_encode(request('price_min', 1))
-    }
-};
-var priceMax = {
-    {
-        json_encode(request('price_max', 99999999))
-    }
-};
+// Giá min/max từ request (fallback nếu không có)
+var priceMin = Number("{{ request('price_min', 1) }}");
+var priceMax = Number("{{ request('price_max', 99999999) }}");
 if (priceSlider) {
     noUiSlider.create(priceSlider, {
         start: [priceMin, priceMax],
@@ -403,9 +401,15 @@ function showCartSuccessModal(msg) {
                 style="cursor:pointer;border-radius:18px;box-shadow:0 2px 16px #e3e3e3;transition:box-shadow .2s,transform .2s;background:#fff;overflow:hidden;position:relative;min-height:420px;display:flex;flex-direction:column;justify-content:space-between;">
                 <div class="product-img" style="padding:24px 24px 0 24px;text-align:center;">
                     @php
-                    $imagePath = $product->image_path && file_exists(public_path('storage/' . $product->image_path))
-                    ? asset('storage/' . $product->image_path)
-                    : asset('img/default-product.png');
+                    $imagePath = asset('img/default-product.png');
+                    if($product->image_path){
+                        if(str_starts_with($product->image_path,'img/')){
+                            $try = public_path($product->image_path);
+                            $imagePath = file_exists($try) ? asset($product->image_path) : $imagePath;
+                        } elseif(file_exists(public_path('storage/'.$product->image_path))){
+                            $imagePath = asset('storage/'.$product->image_path);
+                        }
+                    }
                     @endphp
                     <img src="{{ $imagePath }}" alt="{{ $product->name }}"
                         style="max-width:100%;max-height:180px;border-radius:12px;box-shadow:0 2px 8px #f0f0f0;object-fit:contain;background:#f8fafc;">

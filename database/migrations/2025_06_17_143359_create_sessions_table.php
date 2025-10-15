@@ -11,13 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
+        if (!Schema::hasTable('sessions')) {
+            Schema::create('sessions', function (Blueprint $table) {
+                $table->string('id')->primary();
+                $table->foreignId('user_id')->nullable()->index();
+                $table->string('ip_address', 45)->nullable();
+                $table->text('user_agent')->nullable();
+                $table->longText('payload');
+                $table->integer('last_activity')->index();
+            });
+            return;
+        }
+
+        // If table exists, ensure required columns exist (future-proof)
+        Schema::table('sessions', function (Blueprint $table) {
+            if (!Schema::hasColumn('sessions', 'payload')) {
+                $table->longText('payload');
+            }
+            if (!Schema::hasColumn('sessions', 'last_activity')) {
+                $table->integer('last_activity')->index();
+            }
         });
     }
 
