@@ -23,6 +23,7 @@ class ReviewSeeder extends Seeder
             $this->command->warn('Cần có dữ liệu Product trước khi tạo Review');
             return;
         }
+
         if ($users->isEmpty()) {
             $this->command->warn('Cần có dữ liệu User trước khi tạo Review');
             return;
@@ -74,6 +75,7 @@ class ReviewSeeder extends Seeder
                 $total++;
             }
         }
+
         $this->command->info("Đã tạo $total review cho các sản phẩm!");
     }
 }

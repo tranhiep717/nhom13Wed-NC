@@ -2,7 +2,7 @@
 <html lang="vi">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-t8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Electro - Mẫu Giao Diện Thương Mại Điện Tử HTML</title>
@@ -20,7 +20,6 @@
 </head>
 
 <body>
-    {{-- Đã loại bỏ các dấu hiệu xung đột Git và chỉ giữ lại một header --}}
     @include('partials.header')
 
     @yield('fullwidth')
@@ -28,7 +27,6 @@
         @yield('content')
     </div>
 
-    {{-- Tương tự, chỉ giữ lại một footer. Tôi giả định 'partials.footer' là đúng --}}
     @include('partials.footer')
 
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -40,6 +38,9 @@
     <script src="{{ asset('js/checkout.js') }}"></script>
     <script src="{{ asset('js/wishlist.js') }}"></script>
     <script src="{{ asset('js/wishlist-badge.js') }}"></script>
-    @yield('scripts')
-</body>
+    
+    {{-- Vị trí này sẽ nhận tất cả các script được @push từ các trang con --}}
+    @stack('scripts')
 
+</body>
+</html>

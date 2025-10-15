@@ -1,0 +1,225 @@
+
+   body {
+    background: #fff;
+    font-family: 'Montserrat', sans-serif;
+    color: #212529;
+}
+
+.orders-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #D10024;
+    border-bottom: 3px solid #D10024;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.order-card {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    border-left: 4px solid #D10024;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.order-id {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #111;
+}
+
+.order-status {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+}
+
+/* Trạng thái có phối màu dịu nhưng vẫn theo tone */
+.status-pending {
+    background: linear-gradient(135deg, #ffcf66, #ff9800);
+}
+
+.status-confirmed {
+    background: linear-gradient(135deg, #444, #666);
+}
+
+.status-processing {
+    background: linear-gradient(135deg, #8e44ad, #c0392b);
+}
+
+.status-shipping {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+}
+
+.status-delivered {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.status-cancelled {
+    background: linear-gradient(135deg, #D10024, #e74c3c);
+}
+
+.order-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-section {
+    background: #fafafa;
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 3px solid #D10024;
+}
+
+.info-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.info-detail {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.order-total {
+    background: #D10024;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-action {
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 25px;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-view {
+    background: #212529;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #000;
+}
+
+.btn-cancel {
+    background: #D10024;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #a8001c;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fdfdfd;
+    border-radius: 12px;
+    border: 1px solid #eee;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.empty-subtitle {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.btn-start-shopping {
+    background: #D10024;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-start-shopping:hover {
+    background: #b0001b;
+}
+
+@media (max-width: 768px) {
+    .orders-container {
+        padding: 20px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .order-info {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+

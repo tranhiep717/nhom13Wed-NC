@@ -363,15 +363,14 @@ $wishlistIds = auth()->user()->wishlist()->pluck('product_id')->toArray();
                                     style="color:#aaa;font-size:1rem;font-weight:400;">{{ number_format($relatedProduct->old_price) }}
                                     VNĐ</del>@endif</h4>
                             <div class="product-rating" style="margin-bottom:8px;">
-                                @for ($i = 0; $i < $relatedProduct->rating; $i++)
-                                    <i class="fa fa-star" style="color:#ffc107;"></i>
-                                    @endfor
-                                    @for ($i = $relatedProduct->rating; $i < 5; $i++) <i class="fa fa-star-o"
-                                        style="color:#ffc107;"></i>
-                                        @endfor
-                                        <span
-                                            style="color:#888;font-size:13px;margin-left:4px;">({{ $relatedProduct->ratings_count ?? 0 }})</span>
-                            </div>
+                                        @php $avgRating = $product->averageRating(); @endphp
+                                        @for($i = 1; $i <= 5; $i++) <i
+                                            class="fa fa-star{{ $i <= $avgRating ? '' : '-o' }}" style="color:#ffc107;">
+                                            </i>
+                                            @endfor
+                                            <span
+                                                style="color:#888;font-size:13px;margin-left:4px;">({{ number_format($product->averageRating(), 1) }})</span>
+                                    </div>
                             <div class="product-btns mb-2" style="display:flex;gap:8px;">
                                 <button
                                     class="add-to-wishlist wishlist-btn{{ in_array($relatedProduct->id, $wishlistIds) ? ' added' : '' }}"
