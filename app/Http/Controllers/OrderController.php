@@ -137,9 +137,30 @@ class OrderController extends Controller
             return redirect()->back()->withInput()->with('error', 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại. Lỗi: ' . $e->getMessage());
         }
     }
+public function index()
+    {
+        $orders = Auth::user()->orders()->latest()->get();
+
+        return view('orders.index', compact('orders'));
+    }
+
     public function show($id)
-{
-    $order = Order::with('items')->findOrFail($id); // Lấy đơn hàng và các sản phẩm liên quan
-    return view('orders.show', compact('order'));
-}
+    {
+        $order = Auth::user()->orders()->findOrFail($id);
+
+        return view('orders.show', compact('order'));
+    }
+        private function getStatusText($status)
+    {
+        $statusTexts = [
+            'pending' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'processing' => 'Đang xử lý',
+            'shipping' => 'Đang giao hàng',
+            'delivered' => 'Đã giao hàng',
+            'cancelled' => 'Đã hủy'
+        ];
+
+        return $statusTexts[$status] ?? 'Không xác định';
+    }
 }

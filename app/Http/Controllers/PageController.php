@@ -60,6 +60,22 @@ class PageController extends Controller
         $categories = Category::all();
         return view('clients.categories', compact('categories'));
     }
+    public function policy()
+{
+    return view('clients.policy');
+}
+  public function terms()
+    {
+        return view('clients.terms');
+    }
+     public function aboutUs()
+    {
+        return view('clients.about-us');
+    }
+    public function orderAndReturn()
+    {
+        return view('clients.order-and-return');
+    }
 
     public function checkout(Request $request)
     {

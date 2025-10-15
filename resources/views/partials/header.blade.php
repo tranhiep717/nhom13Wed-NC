@@ -17,7 +17,7 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-						<li><a href="{{ route('cart.index') }}">Xem giỏ hàng</a></li>
+						<li><a href="{{ route('orders.index') }}">Theo dõi đơn hàng</a></li>
 						<li>
 							<form method="POST" action="{{ route('logout') }}" style="display:inline;">
 								@csrf

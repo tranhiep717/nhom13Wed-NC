@@ -17,12 +17,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => fake()->unique()->safeEmail(),
         ]);
-        // Thêm nhiều user mẫu để phục vụ review
         User::factory(200)->create();
 
-        // ✅ Quan trọng: Gọi theo thứ tự phù hợp
-        // 1. Category và Brand trước (không phụ thuộc vào gì)
-        // 2. Product sau (phụ thuộc vào category và brand)
         $this->call(CategorySeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(ProductSeeder::class);

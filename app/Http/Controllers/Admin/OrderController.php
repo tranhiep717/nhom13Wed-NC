@@ -32,5 +32,19 @@ class OrderController extends Controller
         $order = Order::with(['user', 'items'])->findOrFail($id);
         return view('admin.orders.show', compact('order'));
     }
+    public function cancel($id)
+    {
+        $order = Order::findOrFail($id);
+
+        if ($order->status === 'cancelled') {
+            return redirect()->back()->with('info', 'Đơn hàng đã bị huỷ trước đó.');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Huỷ đơn hàng thành công.');
+    }
+    
 
 }

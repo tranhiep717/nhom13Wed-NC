@@ -43,13 +43,3 @@
     @yield('scripts')
 </body>
 
-</html>
-<li>
-    <a href="{{ route('cart.index') }}" style="position:relative;">
-        <i class="fa fa-shopping-cart"></i>
-        Giỏ hàng của bạn
-        @if(isset($cartCount) && $cartCount > 0)
-        <span class="cart-qty-badge" style="position:absolute;top:-8px;right:-18px;background:#d10024;color:#fff;border-radius:50%;padding:2px 7px;font-size:13px;">{{ $cartCount }}</span>
-        @endif
-    </a>
-</li>

@@ -54,7 +54,14 @@ Route::get('/order-success', function() {
 })->name('order.success');
 
 Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+// Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
+
+Route::get('/chinh-sach-bao-mat', [PageController::class, 'policy'])->name('policy');
+Route::get('/dieu-khoan-su-dung', [PageController::class, 'terms'])->name('terms');
+Route::get('/ve-chung-toi', [PageController::class, 'aboutUs'])->name('aboutUs');
+Route::get('/chinh-sach-bao-hanh-doi-tra-hang', [PageController::class, 'orderAndReturn'])->name('orderAndReturn');
 
 // Đánh giá sản phẩm
 Route::post('/products/{id}/rating', [ProductController::class, 'postRating'])->name('products.rating')->middleware('auth');
@@ -64,14 +71,19 @@ Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/register', [RegisterController::class, 'register'])->name('register');
 Route::post('/register', [RegisterController::class, 'postRegister']);
 // Dashboard
-Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/dashboard', function (Request $request) { // Thêm Request $request
+    return view('user.main', [
+        'user' => $request->user(), // Truyền dữ liệu người dùng
+        'orders' => $request->user()->orders()->latest()->get(), // Thêm orders
+    ]);
+})->middleware(['auth', 'verified'])->name('dashboard');
 // Profile (middleware auth)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
 });
 
 
@@ -153,11 +165,10 @@ Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
         Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
 
         // Orders (bạn có thể bổ sung CRUD tương tự nếu cần)
-        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::post('/orders/{id}/confirm', [AdminOrderController::class, 'confirm'])->name('orders.confirm');
 
         Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
-
     });
 }); // <-- Kết thúc group route prefix('admin')
 

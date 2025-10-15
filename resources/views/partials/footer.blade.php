@@ -32,11 +32,11 @@
 					<div class="footer">
 						<h3 class="footer-title">Thông tin</h3>
 						<ul class="footer-links">
-							<li><a href="#">Về chúng tôi</a></li>
+							<li><a href="{{ route('aboutUs') }}">Về chúng tôi</a></li>
 							<li><a href="#">Liên hệ chúng tôi</a></li>
-							<li><a href="#">Chính sách bảo mật</a></li>
-							<li><a href="#">Đơn hàng và Trả hàng</a></li>
-							<li><a href="#">Điều khoản & Điều kiện</a></li>
+							<li><a href="{{ route('policy') }}">Chính sách bảo mật</a></li>
+							<li><a href="{{ route('orderAndReturn') }}">Chính Sách Bảo Hành - Đổi Trả Hàng</a></li>
+							<li><a href="{{ route('terms') }}">Điều khoản sử dụng dịch vụ</a></li>
 						</ul>
 					</div>
 				</div>
